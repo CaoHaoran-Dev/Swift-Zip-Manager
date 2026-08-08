@@ -6,6 +6,7 @@ struct SwiftZipManagerApp: App {
     @StateObject private var languageManager = LanguageManager()
     @StateObject private var updateChecker = UpdateChecker()
     @AppStorage("autoCheckUpdates") private var autoCheckUpdates = true
+    @AppStorage("includePrereleaseUpdates") private var includePrereleaseUpdates = false
     @State private var showHelp = false
     
     var body: some Scene {
@@ -21,7 +22,10 @@ struct SwiftZipManagerApp: App {
                     showHelp = true
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .checkForUpdatesNotification)) { _ in
-                    updateChecker.checkForUpdates(showIfNone: true)
+                    updateChecker.checkForUpdates(
+                        includePrerelease: includePrereleaseUpdates,
+                        showIfNone: true
+                    )
                 }
                 .sheet(isPresented: $showHelp) {
                     HelpView()
@@ -29,13 +33,15 @@ struct SwiftZipManagerApp: App {
                 .onAppear {
                     if autoCheckUpdates {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            updateChecker.checkForUpdates()
+                            updateChecker.checkForUpdates(
+                                includePrerelease: includePrereleaseUpdates
+                            )
                         }
                     }
                 }
         }
         .commands {
-            // 文件菜单
+            // MARK: - File Menu
             CommandGroup(after: .newItem) {
                 Button("New Archive") {
                     appState.showNewArchive = true
@@ -60,7 +66,7 @@ struct SwiftZipManagerApp: App {
                 .keyboardShortcut("w", modifiers: .command)
             }
             
-            // 编辑菜单
+            // MARK: - Edit Menu
             CommandGroup(after: .pasteboard) {
                 Divider()
                 Button("Extract Selected") {
@@ -81,7 +87,7 @@ struct SwiftZipManagerApp: App {
                 .keyboardShortcut(.delete, modifiers: [])
             }
             
-            // 显示菜单
+            // MARK: - View Menu
             CommandGroup(after: .toolbar) {
                 Button("Show in Finder") {
                     NotificationCenter.default.post(name: .showInFinderNotification, object: nil)
@@ -89,33 +95,35 @@ struct SwiftZipManagerApp: App {
                 .keyboardShortcut("r", modifiers: .command)
             }
             
+            // MARK: - App Menu
             CommandGroup(after: .appInfo) {
                 Divider()
                 Button("Settings...") {
                     appState.showSettings = true
                 }
                 .keyboardShortcut(",", modifiers: .command)
+                
+                Divider()
+                Button("Check for Updates...") {
+                    updateChecker.checkForUpdates(
+                        includePrerelease: includePrereleaseUpdates,
+                        showIfNone: true
+                    )
+                }
+                .keyboardShortcut("u", modifiers: .command)
             }
             
-            // 帮助菜单
+            // MARK: - Help Menu
             CommandGroup(replacing: .help) {
                 Button("Swift Zip Manager Help") {
                     NotificationCenter.default.post(name: .showHelpNotification, object: nil)
                 }
                 .keyboardShortcut("?", modifiers: .command)
             }
-            
-            // 更新菜单
-            CommandGroup(after: .appInfo) {
-                Divider()
-                Button("Check for Updates...") {
-                    updateChecker.checkForUpdates(showIfNone: true)
-                }
-                .keyboardShortcut("u", modifiers: .command)
-            }
         }
     }
     
+    // MARK: - Window Management
     private func newWindow() {
         let url = Bundle.main.bundleURL
         let configuration = NSWorkspace.OpenConfiguration()
@@ -128,7 +136,7 @@ struct SwiftZipManagerApp: App {
     }
 }
 
-// MARK: - 通知扩展
+// MARK: - Notification Extensions
 extension Notification.Name {
     static let checkForUpdatesNotification = Notification.Name("checkForUpdatesNotification")
     static let openArchiveNotification = Notification.Name("openArchiveNotification")

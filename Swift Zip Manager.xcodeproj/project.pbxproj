@@ -3,16 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		AD12EEC72F5AEC2200C0B791 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD12EEC62F5AEC2200C0B791 /* ContentView.swift */; };
 		AD12EEC92F5AEC2400C0B791 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD12EEC82F5AEC2400C0B791 /* Assets.xcassets */; };
 		AD12EECC2F5AEC2400C0B791 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD12EECB2F5AEC2400C0B791 /* Preview Assets.xcassets */; };
-		AD12EED72F5AEC2500C0B791 /* Swift-Zip-ManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD12EED62F5AEC2500C0B791 /* Swift-Zip-ManagerTests.swift */; };
-		AD12EEE12F5AEC2500C0B791 /* Swift-Zip-ManagerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD12EEE02F5AEC2500C0B791 /* Swift-Zip-ManagerUITests.swift */; };
-		AD12EEE32F5AEC2500C0B791 /* Swift-Zip-ManagerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD12EEE22F5AEC2500C0B791 /* Swift-Zip-ManagerUITestsLaunchTests.swift */; };
 		AD80CF8C2FB85F1B0018BE1C /* DeveloperSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD80CF8B2FB85F180018BE1C /* DeveloperSettingsView.swift */; };
 		ADB2AB5D2F7F881A0033BADF /* RecentFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB2AB5C2F7F880D0033BADF /* RecentFile.swift */; };
 		ADB2AB5F2F7F88500033BADF /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB2AB5E2F7F88410033BADF /* FileItem.swift */; };
@@ -35,23 +32,6 @@
 		ADE5A91C2F9A2D7000390FF9 /* UpdateCheckr.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE5A91B2F9A2D5B00390FF9 /* UpdateCheckr.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		AD12EED32F5AEC2500C0B791 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AD12EEB92F5AEC2200C0B791 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AD12EEC02F5AEC2200C0B791;
-			remoteInfo = "Swift Zip Manager";
-		};
-		AD12EEDD2F5AEC2500C0B791 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AD12EEB92F5AEC2200C0B791 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AD12EEC02F5AEC2200C0B791;
-			remoteInfo = "Swift Zip Manager";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		ADEB231B2FB84C2B00CC2633 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -71,13 +51,12 @@
 		AD12EEC82F5AEC2400C0B791 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD12EECB2F5AEC2400C0B791 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AD12EECD2F5AEC2400C0B791 /* Swift_Zip_Manager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Swift_Zip_Manager.entitlements; sourceTree = "<group>"; };
-		AD12EED22F5AEC2500C0B791 /* Swift Zip ManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swift Zip ManagerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD12EED62F5AEC2500C0B791 /* Swift-Zip-ManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift-Zip-ManagerTests.swift"; sourceTree = "<group>"; };
-		AD12EEDC2F5AEC2500C0B791 /* Swift Zip ManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swift Zip ManagerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD12EEE02F5AEC2500C0B791 /* Swift-Zip-ManagerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift-Zip-ManagerUITests.swift"; sourceTree = "<group>"; };
-		AD12EEE22F5AEC2500C0B791 /* Swift-Zip-ManagerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift-Zip-ManagerUITestsLaunchTests.swift"; sourceTree = "<group>"; };
 		AD12EEF22F5B0E8300C0B791 /* Swift-Zip-Manager-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Swift-Zip-Manager-Info.plist"; sourceTree = SOURCE_ROOT; };
 		AD80CF8B2FB85F180018BE1C /* DeveloperSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperSettingsView.swift; sourceTree = "<group>"; };
+		AD8D4C7B3027199800E68398 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		AD8D4C7C3027199800E68398 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		AD8D4C7D3027199800E68398 /* README.zh.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.zh.md; sourceTree = "<group>"; };
+		AD8D4C9830273CCA00E68398 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		ADB2AB5C2F7F880D0033BADF /* RecentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentFile.swift; sourceTree = "<group>"; };
 		ADB2AB5E2F7F88410033BADF /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		ADB2AB602F7F88650033BADF /* ArchiveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEntry.swift; sourceTree = "<group>"; };
@@ -109,29 +88,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AD12EECF2F5AEC2500C0B791 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AD12EED92F5AEC2500C0B791 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		AD12EEB82F5AEC2200C0B791 = {
 			isa = PBXGroup;
 			children = (
+				AD8D4C9830273CCA00E68398 /* README.md */,
+				AD8D4C7B3027199800E68398 /* .gitignore */,
+				AD8D4C7C3027199800E68398 /* LICENSE */,
+				AD8D4C7D3027199800E68398 /* README.zh.md */,
 				AD12EEC32F5AEC2200C0B791 /* Swift Zip Manager */,
-				AD12EED52F5AEC2500C0B791 /* Swift Zip ManagerTests */,
-				AD12EEDF2F5AEC2500C0B791 /* Swift Zip ManagerUITests */,
 				ADEB23072FB84C2700CC2633 /* Frameworks */,
 				AD12EEC22F5AEC2200C0B791 /* Products */,
 			);
@@ -141,8 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				AD12EEC12F5AEC2200C0B791 /* Swift Zip Manager.app */,
-				AD12EED22F5AEC2500C0B791 /* Swift Zip ManagerTests.xctest */,
-				AD12EEDC2F5AEC2500C0B791 /* Swift Zip ManagerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,23 +135,6 @@
 				AD12EECB2F5AEC2400C0B791 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		AD12EED52F5AEC2500C0B791 /* Swift Zip ManagerTests */ = {
-			isa = PBXGroup;
-			children = (
-				AD12EED62F5AEC2500C0B791 /* Swift-Zip-ManagerTests.swift */,
-			);
-			path = "Swift Zip ManagerTests";
-			sourceTree = "<group>";
-		};
-		AD12EEDF2F5AEC2500C0B791 /* Swift Zip ManagerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				AD12EEE02F5AEC2500C0B791 /* Swift-Zip-ManagerUITests.swift */,
-				AD12EEE22F5AEC2500C0B791 /* Swift-Zip-ManagerUITestsLaunchTests.swift */,
-			);
-			path = "Swift Zip ManagerUITests";
 			sourceTree = "<group>";
 		};
 		ADB2AB582F7F87B30033BADF /* Models */ = {
@@ -268,42 +216,6 @@
 			productReference = AD12EEC12F5AEC2200C0B791 /* Swift Zip Manager.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AD12EED12F5AEC2500C0B791 /* Swift Zip ManagerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AD12EEE92F5AEC2500C0B791 /* Build configuration list for PBXNativeTarget "Swift Zip ManagerTests" */;
-			buildPhases = (
-				AD12EECE2F5AEC2500C0B791 /* Sources */,
-				AD12EECF2F5AEC2500C0B791 /* Frameworks */,
-				AD12EED02F5AEC2500C0B791 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				AD12EED42F5AEC2500C0B791 /* PBXTargetDependency */,
-			);
-			name = "Swift Zip ManagerTests";
-			productName = "Swift Zip ManagerTests";
-			productReference = AD12EED22F5AEC2500C0B791 /* Swift Zip ManagerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		AD12EEDB2F5AEC2500C0B791 /* Swift Zip ManagerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AD12EEEC2F5AEC2500C0B791 /* Build configuration list for PBXNativeTarget "Swift Zip ManagerUITests" */;
-			buildPhases = (
-				AD12EED82F5AEC2500C0B791 /* Sources */,
-				AD12EED92F5AEC2500C0B791 /* Frameworks */,
-				AD12EEDA2F5AEC2500C0B791 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				AD12EEDE2F5AEC2500C0B791 /* PBXTargetDependency */,
-			);
-			name = "Swift Zip ManagerUITests";
-			productName = "Swift Zip ManagerUITests";
-			productReference = AD12EEDC2F5AEC2500C0B791 /* Swift Zip ManagerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -317,34 +229,37 @@
 					AD12EEC02F5AEC2200C0B791 = {
 						CreatedOnToolsVersion = 14.0.1;
 					};
-					AD12EED12F5AEC2500C0B791 = {
-						CreatedOnToolsVersion = 14.0.1;
-						TestTargetID = AD12EEC02F5AEC2200C0B791;
-					};
-					AD12EEDB2F5AEC2500C0B791 = {
-						CreatedOnToolsVersion = 14.0.1;
-						TestTargetID = AD12EEC02F5AEC2200C0B791;
-					};
 				};
 			};
 			buildConfigurationList = AD12EEBC2F5AEC2200C0B791 /* Build configuration list for PBXProject "Swift Zip Manager" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
+				"zh-Hant",
+				es,
+				fr,
+				de,
+				ja,
+				ko,
+				ru,
+				it,
+				"pt-BR",
+				nl,
+				sv,
+				da,
 			);
 			mainGroup = AD12EEB82F5AEC2200C0B791;
 			packageReferences = (
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = AD12EEC22F5AEC2200C0B791 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				AD12EEC02F5AEC2200C0B791 /* Swift Zip Manager */,
-				AD12EED12F5AEC2500C0B791 /* Swift Zip ManagerTests */,
-				AD12EEDB2F5AEC2500C0B791 /* Swift Zip ManagerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -356,20 +271,6 @@
 			files = (
 				AD12EECC2F5AEC2400C0B791 /* Preview Assets.xcassets in Resources */,
 				AD12EEC92F5AEC2400C0B791 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AD12EED02F5AEC2500C0B791 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AD12EEDA2F5AEC2500C0B791 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,37 +305,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AD12EECE2F5AEC2500C0B791 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AD12EED72F5AEC2500C0B791 /* Swift-Zip-ManagerTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AD12EED82F5AEC2500C0B791 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AD12EEE32F5AEC2500C0B791 /* Swift-Zip-ManagerUITestsLaunchTests.swift in Sources */,
-				AD12EEE12F5AEC2500C0B791 /* Swift-Zip-ManagerUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		AD12EED42F5AEC2500C0B791 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = AD12EEC02F5AEC2200C0B791 /* Swift Zip Manager */;
-			targetProxy = AD12EED32F5AEC2500C0B791 /* PBXContainerItemProxy */;
-		};
-		AD12EEDE2F5AEC2500C0B791 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = AD12EEC02F5AEC2200C0B791 /* Swift Zip Manager */;
-			targetProxy = AD12EEDD2F5AEC2500C0B791 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AD12EEE42F5AEC2500C0B791 /* Debug */ = {
@@ -498,6 +369,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -556,6 +428,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
@@ -571,7 +444,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3E2;
+				CURRENT_PROJECT_VERSION = 1000.6;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Swift Zip Manager/Preview Content\"";
 				DEVELOPMENT_TEAM = MVKBMZMN48;
@@ -593,7 +466,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = "1.0.0-Beta.5";
+				MARKETING_VERSION = "1.0.0-Beta.6";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.haoran.Swift-Zip-Manager";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -619,7 +492,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3E2;
+				CURRENT_PROJECT_VERSION = 1000.6;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Swift Zip Manager/Preview Content\"";
 				DEVELOPMENT_TEAM = MVKBMZMN48;
@@ -641,7 +514,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = "1.0.0-Beta.5";
+				MARKETING_VERSION = "1.0.0-Beta.6";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.haoran.Swift-Zip-Manager";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -653,74 +526,6 @@
 				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		AD12EEEA2F5AEC2500C0B791 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.haoran.Swift-Zip-ManagerTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Swift Zip Manager.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Swift Zip Manager";
-			};
-			name = Debug;
-		};
-		AD12EEEB2F5AEC2500C0B791 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.haoran.Swift-Zip-ManagerTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Swift Zip Manager.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Swift Zip Manager";
-			};
-			name = Release;
-		};
-		AD12EEED2F5AEC2500C0B791 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.haoran.Swift-Zip-ManagerUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = "Swift Zip Manager";
-			};
-			name = Debug;
-		};
-		AD12EEEE2F5AEC2500C0B791 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.haoran.Swift-Zip-ManagerUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = "Swift Zip Manager";
 			};
 			name = Release;
 		};
@@ -741,24 +546,6 @@
 			buildConfigurations = (
 				AD12EEE72F5AEC2500C0B791 /* Debug */,
 				AD12EEE82F5AEC2500C0B791 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		AD12EEE92F5AEC2500C0B791 /* Build configuration list for PBXNativeTarget "Swift Zip ManagerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AD12EEEA2F5AEC2500C0B791 /* Debug */,
-				AD12EEEB2F5AEC2500C0B791 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		AD12EEEC2F5AEC2500C0B791 /* Build configuration list for PBXNativeTarget "Swift Zip ManagerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AD12EEED2F5AEC2500C0B791 /* Debug */,
-				AD12EEEE2F5AEC2500C0B791 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

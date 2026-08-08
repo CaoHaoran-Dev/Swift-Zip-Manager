@@ -1,34 +1,50 @@
-# Swift-Zip-Manager
-一个用 Swift 写的压缩文件管理器，极致简洁，仅 994 KB。
+# Swift Zip Manager
 
-✨ 功能
+macOS 压缩文件管理器，Swift + SwiftUI 实现。
 
-· 解压 ZIP / TAR / GZ
-· 支持 7z / RAR（通过安装工具）
-· 创建 ZIP / TAR / GZ 归档文件
-· 自定义解压路径
-· 语言界面（14 种语言，正在开发中）
-· 工具一键安装
-· 帮助系统 + 快捷键支持
-. 可实现自动更新（GitHub API）
+> 当前版本：1.0.0-Beta.6 · 开发中
 
-📱 平台
+## 功能
 
-· macOS 13.5+
+- 解压 / 创建 ZIP、TAR、GZ、7Z、RAR
+- 加密归档（ZIP / 7Z / RAR 支持密码保护）
+- 归档内容浏览（列表 / 网格视图）
+- 单文件提取 / 全部提取 / 删除文件
+- 文件浏览器（侧边栏快速访问常用目录）
+- 最近文件记录
+- 一键安装 7zz 和 RAR 工具
+- 自动更新检查（GitHub API）
+- 多语言支持（14 种语言，开发中）
+- 开发者模式（调试工具、实验性功能、高级设置）
+- 键盘快捷键支持
 
-📦 体积:994 KB（比一张截图还小）
+## 技术栈
 
-🗓️ 版本计划
+- Swift 5 + SwiftUI
+- Process / Pipe（命令行工具调用）
+- CryptoKit（AES-256-GCM 加密）
+- macOS 13.5+
 
-. v1.0.0-Beta.x ：基本完成，加一些小功能
-. v1.0.0-RC.x ：最终验证
-· v1.0.0（正式版）: 完整功能 + 宣传视频上线
+## 安装
 
-💻 其他版本
+从 Releases 下载 DMG，将 App 拖入 Applications 文件夹。
 
-Swift Zip Manager For iOS：为iOS设计的归档管理器 （ https://github.com/HaoranisHaoran/Swift-Zip-Manager-For-iOS ）
-C# Zip Manager：Swift Zip Manager的衍生产品，正在开发中
+> 首次启动如遇安全拦截，请前往「系统设置 > 隐私与安全性」点击「仍要打开」。
 
-🔗 下载
+## 使用
 
-GitHub Releases 页面提供 .dmg 安装包
+- `⌘O` 打开归档，`⌘A` 新建归档
+- `⌘E` 解压选中，`⌘⇧E` 解压全部
+- `⌘,` 打开设置，`⌘?` 打开帮助
+- 侧边栏快速访问常用目录，双击归档自动加载
+- 开发者模式：关于页面点击版本号 5 次开启
+
+## 已知问题
+
+- 多语言支持尚未完全实现（目前仅英文可用）
+
+## 许可证
+
+MIT License
+
+[English](README.md)

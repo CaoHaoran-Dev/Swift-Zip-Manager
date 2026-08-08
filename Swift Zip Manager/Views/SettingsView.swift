@@ -18,6 +18,7 @@ struct SettingsView: View {
     
     @StateObject private var updateChecker = UpdateChecker()
     @AppStorage("autoCheckUpdates") private var autoCheckUpdates = true
+    @AppStorage("includePrereleaseUpdates") private var includePrereleaseUpdates = false
     @State private var showUpdateSheet = false
     
     @State private var versionTapCount = 0
@@ -25,22 +26,22 @@ struct SettingsView: View {
     
     let languages = [
         "en": "English",
-        "zh-Hans": "简体中文",
-        "zh-Hant": "繁體中文",
-        "es": "Español",
-        "fr": "Français",
-        "de": "Deutsch",
-        "ja": "日本語",
-        "ko": "한국어",
-        "ru": "Русский",
-        "it": "Italiano",
-        "pt": "Português",
-        "nl": "Nederlands",
-        "sv": "Svenska",
-        "da": "Dansk"
+        //"zh-Hans": "简体中文",
+        //"zh-Hant": "繁體中文",
+        //"es": "Español",
+        //"fr": "Français",
+        //"de": "Deutsch",
+        //"ja": "日本語",
+        //"ko": "한국어",
+        //"ru": "Русский",
+        //"it": "Italiano",
+        //"pt": "Português",
+        //"nl": "Nederlands",
+        //"sv": "Svenska",
+        //"da": "Dansk"
     ]
     
-    let githubURL = "https://github.com/HaoranisHaoran/Swift-Zip-Manager"
+    let githubURL = "https://github.com/CaoHaoran-Dev/Swift-Zip-Manager"
     
     private var currentVersion: String {
         let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
@@ -111,26 +112,68 @@ struct SettingsView: View {
         .frame(width: 750, height: 550)
         .sheet(isPresented: $showUpdateSheet) {
             if let update = updateChecker.updateAvailable {
-                VStack {
-                    Text("New Version Available").font(.headline)
-                    Text("Build \(update.buildNumber)").font(.caption)
-                    Text(update.body).font(.caption).padding()
-                    HStack {
-                        Button("Later") { showUpdateSheet = false }
-                        Button("Download") { startDownload(); showUpdateSheet = false }
+                VStack(spacing: 16) {
+                    Image(systemName: "arrow.down.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(.blue)
+                    
+                    Text("New Version Available")
+                        .font(.headline)
+                    
+                    Text("Build \(update.buildNumber)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    if update.isPrerelease {
+                        Text("⚠️ This is a beta release")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+                    
+                    ScrollView {
+                        Text(update.body)
+                            .font(.caption)
+                            .padding()
+                    }
+                    .frame(height: 100)
+                    .background(Color(NSColor.controlBackgroundColor).opacity(0.3))
+                    .cornerRadius(8)
+                    
+                    Divider()
+                    
+                    HStack(spacing: 20) {
+                        Button("Later") {
+                            showUpdateSheet = false
+                        }
+                        .buttonStyle(.bordered)
+                        
+                        Button("Download & Install") {
+                            startDownload()
+                            showUpdateSheet = false
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
                 }
-                .padding()
-                .frame(width: 400, height: 300)
+                .padding(24)
+                .frame(width: 400, height: 380)
             }
         }
         .alert("Missing Tools", isPresented: $showInstallAlert) {
             Button("Install All") { installTools() }
             Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This app requires additional tools for archive operations:\n\n• 7zz: Universal extractor (supports ZIP, RAR, 7Z, TAR, etc.)\n• rar: RAR compression only\n\nClick Install to download and set up these tools.")
         }
         .alert("Delete Tools", isPresented: $showDeleteConfirm) {
             Button("Delete", role: .destructive) { deleteTools() }
             Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This will remove 7zz and rar tools from the app's support directory.")
+        }
+        .alert(updateChecker.downloadStatus, isPresented: $updateChecker.showUpdateAlert) {
+            Button("OK") { }
+        } message: {
+            Text("The application will restart in \(updateChecker.countdownSeconds) seconds.")
         }
     }
     
@@ -280,6 +323,27 @@ struct SettingsView: View {
                 
                 Divider()
                 
+                HStack(alignment: .top, spacing: 0) {
+                    Text("Update Channel")
+                        .frame(width: 140, alignment: .leading)
+                        .font(.headline)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Picker("", selection: $includePrereleaseUpdates) {
+                            Text("Stable (Recommended)").tag(false)
+                            Text("Beta / RC").tag(true)
+                        }
+                        .pickerStyle(.radioGroup)
+                        .horizontalRadioGroupLayout()
+                        
+                        Text(includePrereleaseUpdates ? "Includes beta and release candidate versions" : "Only stable releases")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Divider()
+                
                 HStack {
                     Text("Auto-check")
                         .frame(width: 140, alignment: .leading)
@@ -307,24 +371,45 @@ struct SettingsView: View {
                 
                 if let update = updateChecker.updateAvailable {
                     HStack {
-                        Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.orange)
-                        Text("Version \(update.buildNumber) available").font(.caption)
-                        Button("View") { showUpdateSheet = true }.buttonStyle(.plain)
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(update.isPrerelease ? .orange : .blue)
+                        Text("Version \(update.buildNumber) available")
+                            .font(.caption)
+                        if update.isPrerelease {
+                            Text("(Beta)")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                        }
+                        Button("View") { showUpdateSheet = true }
+                            .buttonStyle(.plain)
+                            .font(.caption)
                     }
                     .padding(.leading, 148)
                 }
                 
                 if updateChecker.isDownloading {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             ProgressView(value: updateChecker.downloadProgress)
                                 .progressViewStyle(.linear)
                                 .frame(width: 200)
-                            Text(updateChecker.downloadStatus).font(.caption)
+                            Text(updateChecker.downloadStatus)
+                                .font(.caption)
                         }
                         Button("Cancel") { updateChecker.cancelDownload() }
                             .buttonStyle(.plain)
                             .font(.caption)
+                    }
+                    .padding(.leading, 148)
+                }
+                
+                if updateChecker.showUpdateAlert {
+                    HStack {
+                        Image(systemName: "clock.fill")
+                            .foregroundColor(.blue)
+                        Text("Restarting in \(updateChecker.countdownSeconds)s...")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                     .padding(.leading, 148)
                 }
@@ -414,28 +499,34 @@ struct SettingsView: View {
     }
     
     private func checkForUpdates(showNoUpdateAlert: Bool) {
-        updateChecker.checkForUpdates { hasUpdate, message in
+        updateChecker.checkForUpdates(
+            includePrerelease: includePrereleaseUpdates,
+            showIfNone: showNoUpdateAlert
+        ) { hasUpdate, message in
             if hasUpdate {
                 showUpdateSheet = true
             } else if showNoUpdateAlert {
                 let alert = NSAlert()
                 alert.messageText = "No Update Available"
-                alert.informativeText = message ?? "Latest version."
+                alert.informativeText = message ?? "You are running the latest version."
                 alert.runModal()
             }
         }
     }
     
     private func startDownload() {
-        updateChecker.downloadAndInstall(progress: { _, _ in }, completion: { success, msg in
-            if !success {
-                let alert = NSAlert()
-                alert.messageText = "Update Failed"
-                alert.informativeText = msg
-                alert.runModal()
+        updateChecker.downloadAndInstall(
+            progress: { _, _ in },
+            completion: { success, msg in
+                if !success {
+                    let alert = NSAlert()
+                    alert.messageText = "Update Failed"
+                    alert.informativeText = msg
+                    alert.runModal()
+                }
+                showUpdateSheet = false
             }
-            showUpdateSheet = false
-        })
+        )
     }
     
     private func checkAndInstallTools() {
