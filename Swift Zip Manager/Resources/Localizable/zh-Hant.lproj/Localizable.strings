@@ -1,0 +1,346 @@
+/* 
+  Localizable.strings
+  Swift Zip Manager
+
+  Created by Haoran on 2026/8/9.
+  
+*/
+
+/* ========================================
+   App Name & General
+   ======================================== */
+"app.name" = "Swift Zip Manager";
+"app.version" = "Version";
+"app.unknown" = "Unknown";
+
+/* ========================================
+   Menu Bar
+   ======================================== */
+"menu.file" = "File";
+"menu.edit" = "Edit";
+"menu.view" = "View";
+"menu.app" = "App";
+"menu.help" = "Help";
+
+"menu.new.archive" = "New Archive";
+"menu.open.archive" = "Open Archive";
+"menu.new.window" = "New Window";
+"menu.close.window" = "Close Window";
+
+"menu.extract.selected" = "Extract Selected";
+"menu.extract.all" = "Extract All";
+"menu.delete.from.archive" = "Delete from Archive";
+"menu.show.in.finder" = "Show in Finder";
+
+"menu.settings" = "Settings...";
+"menu.check.updates" = "Check for Updates...";
+"menu.help.contents" = "Swift Zip Manager Help";
+
+/* ========================================
+   Sidebar
+   ======================================== */
+"sidebar.quick.actions" = "Quick Actions";
+"sidebar.new.archive" = "New Archive";
+"sidebar.open.archive" = "Open Archive";
+
+"sidebar.locations" = "Locations";
+"sidebar.desktop" = "Desktop";
+"sidebar.documents" = "Documents";
+"sidebar.downloads" = "Downloads";
+"sidebar.home" = "Home";
+
+"sidebar.volumes" = "Volumes";
+"sidebar.recent" = "Recent";
+"sidebar.clear.all" = "Clear All";
+"sidebar.settings" = "Settings";
+
+/* ========================================
+   Right Content / File Browser
+   ======================================== */
+"browser.go.up" = "Go Up";
+"browser.extract.all" = "Extract All";
+"browser.view.list" = "List View";
+"browser.view.grid" = "Grid View";
+
+"browser.column.name" = "Name";
+"browser.column.size" = "Size";
+"browser.column.modified" = "Modified";
+
+"browser.empty.folder" = "Empty Folder";
+"browser.loading" = "Loading...";
+
+/* ========================================
+   Archive Content
+   ======================================== */
+"archive.items" = "%d items";
+"archive.password.required" = "Password Required";
+"archive.password.message" = "This archive may be encrypted. Please enter the password.";
+"archive.password.placeholder" = "Password";
+"archive.password.cancel" = "Cancel";
+"archive.password.extract" = "Extract";
+"archive.password.wrong" = "Wrong password";
+
+"archive.extract.selected" = "Extract";
+"archive.delete" = "Delete";
+"archive.extract.all" = "Extract All";
+
+"archive.extraction.complete" = "Extraction complete: %@";
+"archive.extraction.failed" = "Extraction failed: %@";
+"archive.creation.success" = "Archive created successfully";
+"archive.creation.failed" = "Creation failed: %@";
+
+/* ========================================
+   New Archive
+   ======================================== */
+"newarchive.title" = "New Archive";
+"newarchive.add.files" = "Add Files";
+"newarchive.add.folder" = "Add Folder";
+"newarchive.clear.all" = "Clear All";
+"newarchive.files.count" = "%d files";
+"newarchive.drop.here" = "Drop files here";
+"newarchive.drop.hint" = "Or drag and drop files from Finder";
+
+"newarchive.name.label" = "Name:";
+"newarchive.name.placeholder" = "Archive name";
+"newarchive.format.label" = "Format:";
+"newarchive.save.to.label" = "Save to:";
+"newarchive.browse" = "Browse";
+"newarchive.not.selected" = "Not selected";
+
+"newarchive.encrypt" = "Encrypt Archive";
+"newarchive.password" = "Password";
+"newarchive.confirm.password" = "Confirm Password";
+"newarchive.password.mismatch" = "Passwords do not match";
+
+"newarchive.cancel" = "Cancel";
+"newarchive.create" = "Create";
+
+"newarchive.format.zip" = "Universal, widely supported";
+"newarchive.format.tar" = "Unix/Linux tape archive";
+"newarchive.format.gz" = "GNU Zip compressed TAR";
+"newarchive.format.7z" = "High compression ratio";
+"newarchive.format.rar" = "RAR archive (requires rar tool)";
+
+/* ========================================
+   Settings
+   ======================================== */
+"settings.title" = "Settings";
+"settings.tab.general" = "General";
+"settings.tab.tools" = "Tools";
+"settings.tab.updates" = "Updates";
+"settings.tab.about" = "About";
+"settings.tab.developer" = "Developer";
+"settings.close" = "Close";
+
+/* --- General --- */
+"settings.general.title" = "General";
+"settings.general.language" = "Language";
+"settings.general.display.language" = "Display Language";
+"settings.general.restart.hint" = "Language change requires app restart";
+"settings.general.restart.title" = "Language Changed";
+"settings.general.restart.message" = "Restart to apply changes.";
+"settings.general.restart.now" = "Restart Now";
+"settings.general.restart.later" = "Later";
+
+/* --- Tools --- */
+"settings.tools.title" = "Tools";
+"settings.tools.subtitle" = "Install and manage archive tools (7zz and RAR).";
+"settings.tools.status" = "Status:";
+"settings.tools.installed" = "All tools installed";
+"settings.tools.missing" = "%d tool(s) missing";
+"settings.tools.install" = "Install 7zz & RAR";
+"settings.tools.installing" = "Installing...";
+"settings.tools.delete" = "Delete Tools";
+"settings.tools.checking" = "Checking...";
+"settings.tools.description" = "7zz: Universal extractor (ZIP, RAR, 7Z, TAR, etc.)\nRAR: RAR compression and extraction";
+
+"settings.tools.install.alert.title" = "Missing Tools";
+"settings.tools.install.alert.message" = "This app requires additional tools for archive operations:\n\n• 7zz: Universal extractor (supports ZIP, RAR, 7Z, TAR, etc.)\n• rar: RAR compression only\n\nClick Install to download and set up these tools.";
+"settings.tools.install.alert.install" = "Install All";
+"settings.tools.install.alert.cancel" = "Cancel";
+
+"settings.tools.delete.confirm.title" = "Delete Tools";
+"settings.tools.delete.confirm.message" = "This will remove 7zz and rar tools from the app's support directory.";
+"settings.tools.delete.confirm.delete" = "Delete";
+"settings.tools.delete.confirm.cancel" = "Cancel";
+
+"settings.tools.complete" = "Complete";
+"settings.tools.failed" = "Failed";
+"settings.tools.deleted" = "Deleted";
+"settings.tools.deleted.message" = "Tools removed. Restart required.";
+"settings.tools.delete.failed" = "Could not delete.";
+
+/* --- Updates --- */
+"settings.updates.title" = "Updates";
+"settings.updates.subtitle" = "Check for new versions and manage update settings.";
+"settings.updates.current.version" = "Current Version";
+"settings.updates.channel" = "Update Channel";
+"settings.updates.channel.stable" = "Stable (Recommended)";
+"settings.updates.channel.beta" = "Beta / RC";
+"settings.updates.channel.stable.desc" = "Only stable releases";
+"settings.updates.channel.beta.desc" = "Includes beta and release candidate versions";
+"settings.updates.auto.check" = "Auto-check";
+"settings.updates.auto.check.desc" = "Check for updates automatically";
+"settings.updates.check.button" = "Check for Updates";
+"settings.updates.checking" = "Checking...";
+"settings.updates.available" = "Version %@ available";
+"settings.updates.beta" = "(Beta)";
+"settings.updates.view" = "View";
+"settings.updates.downloading" = "Downloading... %d%%";
+"settings.updates.cancel" = "Cancel";
+"settings.updates.restarting" = "Restarting in %ds...";
+"settings.updates.footer" = "Updates are downloaded from GitHub Releases";
+
+"settings.updates.no.update.title" = "No Update Available";
+"settings.updates.no.update.message" = "You are running the latest version.";
+
+"settings.updates.new.available.title" = "New Version Available";
+"settings.updates.new.available.later" = "Later";
+"settings.updates.new.available.download" = "Download & Install";
+
+"settings.updates.download.failed" = "Update Failed";
+
+/* --- About --- */
+"settings.about.title" = "About";
+"settings.about.version" = "Version %@";
+"settings.about.developer.mode" = "Developer Mode Active";
+"settings.about.license" = "MIT License • Open Source";
+
+/* ========================================
+   Help
+   ======================================== */
+"help.title" = "Help";
+"help.search.placeholder" = "Search";
+"help.search.empty" = "No results found for \"%@\"";
+"help.close" = "Close";
+
+"help.item.open.archive" = "📦 Open Archive";
+"help.item.open.archive.desc1" = "Click 'Open Archive' or press ⌘O to open";
+"help.item.open.archive.desc2" = "Supported: ZIP, TAR, GZ, 7Z, RAR";
+
+"help.item.new.archive" = "🆕 New Archive";
+"help.item.new.archive.desc1" = "Click 'New Archive' or press ⌘A to create";
+"help.item.new.archive.desc2" = "Add files, choose format, select destination";
+
+"help.item.extract" = "📤 Extract";
+"help.item.extract.desc1" = "Select files, click 'Extract'";
+"help.item.extract.desc2" = "Supports all formats";
+
+"help.item.modify" = "✏️ Modify";
+"help.item.modify.desc1" = "Drag files to add";
+"help.item.modify.desc2" = "Right-click to delete";
+
+"help.item.settings" = "⚙️ Settings";
+"help.item.settings.desc1" = "Change language, install tools";
+"help.item.settings.desc2" = "Press ⌘, to open settings";
+
+"help.item.shortcuts" = "⌨️ Shortcuts";
+"help.item.shortcuts.desc1" = "⌘A - New Archive";
+"help.item.shortcuts.desc2" = "⌘O - Open Archive";
+"help.item.shortcuts.desc3" = "⌘, - Settings";
+"help.item.shortcuts.desc4" = "⌘? - Help";
+
+/* ========================================
+   Developer Mode
+   ======================================== */
+"developer.title" = "Developer";
+"developer.subtitle" = "Tools for developers and advanced users";
+
+"developer.category.debug" = "Debug";
+"developer.category.experimental" = "Experimental";
+"developer.category.unstable" = "Unstable";
+"developer.category.advanced" = "Advanced";
+
+"developer.category.debug.desc" = "Debugging tools and diagnostics";
+"developer.category.experimental.desc" = "Experimental features (may change or be removed)";
+"developer.category.unstable.desc" = "Unstable features (may crash or lose data)";
+"developer.category.advanced.desc" = "Advanced settings for power users";
+
+/* --- Debug --- */
+"developer.debug.logging" = "Logging";
+"developer.debug.logging.enable" = "Enable Debug Logging";
+"developer.debug.logging.desc" = "Log all operations to console and developer panel";
+"developer.debug.show.hidden" = "Show Hidden Files";
+"developer.debug.show.hidden.desc" = "Show .DS_Store, .localized and other hidden files";
+"developer.debug.export.logs" = "Export Debug Logs";
+"developer.debug.clear.logs" = "Clear Logs";
+"developer.debug.view.console" = "View Logs in Console";
+
+"developer.debug.tool.paths" = "Tool Paths";
+"developer.debug.custom.paths" = "Use Custom Tool Paths";
+"developer.debug.path.7zz" = "7zz Path:";
+"developer.debug.path.rar" = "RAR Path:";
+"developer.debug.path.browse" = "Browse";
+"developer.debug.path.restart.hint" = "⚠️ Changes will take effect after app restart";
+
+"developer.debug.test.operations" = "Test Operations";
+"developer.debug.test.load" = "Simulate Archive Load";
+"developer.debug.test.error" = "Simulate Extraction Error";
+"developer.debug.test.tools" = "Test Tool Paths";
+
+/* --- Experimental --- */
+"developer.experimental.title" = "Experimental Features";
+"developer.experimental.parallel" = "Parallel Extraction";
+"developer.experimental.parallel.desc" = "Extract multiple files simultaneously for faster performance";
+"developer.experimental.new.engine" = "New Extraction Engine";
+"developer.experimental.new.engine.desc" = "Use the new extraction engine with better performance";
+"developer.experimental.fast.zip" = "Fast ZIP Processing";
+"developer.experimental.fast.zip.desc" = "Skip CRC check for faster ZIP extraction (less reliable)";
+"developer.experimental.warning" = "⚠️ These features are experimental and may change or be removed";
+
+/* --- Unstable --- */
+"developer.unstable.title" = "Unstable Features";
+"developer.unstable.async" = "Async File Writing";
+"developer.unstable.async.desc" = "Write files asynchronously (may cause data loss if app crashes)";
+"developer.unstable.memory" = "In-Memory Extraction";
+"developer.unstable.memory.desc" = "Extract directly to memory (high RAM usage, may crash on large files)";
+"developer.unstable.skip.permissions" = "Skip Permission Checks";
+"developer.unstable.skip.permissions.desc" = "Bypass file permission checks (security risk)";
+"developer.unstable.warning" = "⚠️⚠️ WARNING: These features are unstable and may cause crashes or data loss ⚠️⚠️";
+
+/* --- Advanced --- */
+"developer.advanced.title" = "Performance Settings";
+"developer.advanced.memory.limit" = "Memory Limit (MB):";
+"developer.advanced.memory.apply" = "Apply";
+"developer.advanced.memory.desc" = "Maximum memory usage during extraction";
+"developer.advanced.temp.dir" = "Temp Directory:";
+"developer.advanced.temp.browse" = "Browse";
+"developer.advanced.temp.apply" = "Apply";
+"developer.advanced.temp.desc" = "Custom temporary directory for extraction (restart required)";
+"developer.advanced.max.concurrent" = "Max Concurrent Operations:";
+"developer.advanced.max.concurrent.desc" = "Maximum number of parallel operations";
+
+"developer.advanced.danger" = "Danger Zone";
+"developer.advanced.reset" = "Reset All Settings";
+"developer.advanced.clear.cache" = "Clear All Cache";
+"developer.advanced.open.support" = "Open App Support Directory";
+
+/* ========================================
+   Updates (System)
+   ======================================== */
+"update.checking" = "Checking for updates...";
+"update.available" = "Update available!";
+"update.none" = "No update available";
+"update.downloading" = "Downloading...";
+"update.extracting" = "Extracting...";
+"update.installing" = "Installing...";
+"update.restart" = "Restarting in %ds...";
+"update.complete" = "Update complete";
+
+/* ========================================
+   Tools Installer
+   ======================================== */
+"tools.installing" = "Installing %@...";
+"tools.install.complete" = "Installation complete";
+
+/* ========================================
+   Errors & Alerts
+   ======================================== */
+"error.unsupported.format" = "Unsupported archive format";
+"error.tool.not.found" = "Required tool not found: %@";
+"error.command.failed" = "Command failed: %@";
+"error.password.required" = "Password required for this archive";
+"error.unknown" = "An unknown error occurred";
+
+"alert.ok" = "OK";
+"alert.done" = "Done";
