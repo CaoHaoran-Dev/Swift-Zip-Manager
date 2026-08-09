@@ -204,7 +204,7 @@
 "settings.about.title" = "关于";
 "settings.about.version" = "版本 %@";
 "settings.about.developer.mode" = "开发者模式已启用";
-"settings.about.license" = "MIT 许可证 • 开源";
+"settings.about.license" = "MIT 许可证 • Open Source";
 
 /* ========================================
    帮助

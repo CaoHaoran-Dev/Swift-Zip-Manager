@@ -77,4 +77,4 @@ Tap the version number in About page 5 times to enable.
 
 MIT License
 
-[简体中文](README.zh.md)
+[简体中文](Docs/README.zh.md)

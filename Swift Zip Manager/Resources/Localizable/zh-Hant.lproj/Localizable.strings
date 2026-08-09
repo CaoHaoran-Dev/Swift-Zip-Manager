@@ -7,340 +7,340 @@
 */
 
 /* ========================================
-   App Name & General
+   應用程式名稱 & 通用
    ======================================== */
 "app.name" = "Swift Zip Manager";
-"app.version" = "Version";
-"app.unknown" = "Unknown";
+"app.version" = "版本";
+"app.unknown" = "未知";
 
 /* ========================================
-   Menu Bar
+   選單列
    ======================================== */
-"menu.file" = "File";
-"menu.edit" = "Edit";
-"menu.view" = "View";
-"menu.app" = "App";
-"menu.help" = "Help";
+"menu.file" = "檔案";
+"menu.edit" = "編輯";
+"menu.view" = "檢視";
+"menu.app" = "應用程式";
+"menu.help" = "輔助說明";
 
-"menu.new.archive" = "New Archive";
-"menu.open.archive" = "Open Archive";
-"menu.new.window" = "New Window";
-"menu.close.window" = "Close Window";
+"menu.new.archive" = "新建封存檔";
+"menu.open.archive" = "開啟封存檔";
+"menu.new.window" = "新增視窗";
+"menu.close.window" = "關閉視窗";
 
-"menu.extract.selected" = "Extract Selected";
-"menu.extract.all" = "Extract All";
-"menu.delete.from.archive" = "Delete from Archive";
-"menu.show.in.finder" = "Show in Finder";
+"menu.extract.selected" = "擷取所選";
+"menu.extract.all" = "全部擷取";
+"menu.delete.from.archive" = "從封存檔中刪除";
+"menu.show.in.finder" = "在 Finder 中顯示";
 
-"menu.settings" = "Settings...";
-"menu.check.updates" = "Check for Updates...";
-"menu.help.contents" = "Swift Zip Manager Help";
+"menu.settings" = "設定...";
+"menu.check.updates" = "檢查更新...";
+"menu.help.contents" = "Swift Zip Manager 輔助說明";
 
 /* ========================================
-   Sidebar
+   側邊欄
    ======================================== */
-"sidebar.quick.actions" = "Quick Actions";
-"sidebar.new.archive" = "New Archive";
-"sidebar.open.archive" = "Open Archive";
+"sidebar.quick.actions" = "快速操作";
+"sidebar.new.archive" = "新建封存檔";
+"sidebar.open.archive" = "開啟封存檔";
 
-"sidebar.locations" = "Locations";
-"sidebar.desktop" = "Desktop";
-"sidebar.documents" = "Documents";
-"sidebar.downloads" = "Downloads";
-"sidebar.home" = "Home";
+"sidebar.locations" = "位置";
+"sidebar.desktop" = "桌面";
+"sidebar.documents" = "文件";
+"sidebar.downloads" = "下載項目";
+"sidebar.home" = "個人專屬";
 
-"sidebar.volumes" = "Volumes";
-"sidebar.recent" = "Recent";
-"sidebar.clear.all" = "Clear All";
-"sidebar.settings" = "Settings";
+"sidebar.volumes" = "卷宗";
+"sidebar.recent" = "最近使用";
+"sidebar.clear.all" = "全部清除";
+"sidebar.settings" = "設定";
 
 /* ========================================
-   Right Content / File Browser
+   右側內容 / 檔案瀏覽器
    ======================================== */
-"browser.go.up" = "Go Up";
-"browser.extract.all" = "Extract All";
-"browser.view.list" = "List View";
-"browser.view.grid" = "Grid View";
+"browser.go.up" = "向上";
+"browser.extract.all" = "全部擷取";
+"browser.view.list" = "列表檢視";
+"browser.view.grid" = "格狀檢視";
 
-"browser.column.name" = "Name";
-"browser.column.size" = "Size";
-"browser.column.modified" = "Modified";
+"browser.column.name" = "名稱";
+"browser.column.size" = "大小";
+"browser.column.modified" = "修改日期";
 
-"browser.empty.folder" = "Empty Folder";
-"browser.loading" = "Loading...";
+"browser.empty.folder" = "空檔案夾";
+"browser.loading" = "載入中...";
 
 /* ========================================
-   Archive Content
+   封存檔內容
    ======================================== */
-"archive.items" = "%d items";
-"archive.password.required" = "Password Required";
-"archive.password.message" = "This archive may be encrypted. Please enter the password.";
-"archive.password.placeholder" = "Password";
-"archive.password.cancel" = "Cancel";
-"archive.password.extract" = "Extract";
-"archive.password.wrong" = "Wrong password";
+"archive.items" = "%d 個項目";
+"archive.password.required" = "需要密碼";
+"archive.password.message" = "此封存檔可能已加密，請輸入密碼。";
+"archive.password.placeholder" = "密碼";
+"archive.password.cancel" = "取消";
+"archive.password.extract" = "擷取";
+"archive.password.wrong" = "密碼錯誤";
 
-"archive.extract.selected" = "Extract";
-"archive.delete" = "Delete";
-"archive.extract.all" = "Extract All";
+"archive.extract.selected" = "擷取";
+"archive.delete" = "刪除";
+"archive.extract.all" = "全部擷取";
 
-"archive.extraction.complete" = "Extraction complete: %@";
-"archive.extraction.failed" = "Extraction failed: %@";
-"archive.creation.success" = "Archive created successfully";
-"archive.creation.failed" = "Creation failed: %@";
+"archive.extraction.complete" = "擷取完成：%@";
+"archive.extraction.failed" = "擷取失敗：%@";
+"archive.creation.success" = "封存檔建立成功";
+"archive.creation.failed" = "建立失敗：%@";
 
 /* ========================================
-   New Archive
+   新建封存檔
    ======================================== */
-"newarchive.title" = "New Archive";
-"newarchive.add.files" = "Add Files";
-"newarchive.add.folder" = "Add Folder";
-"newarchive.clear.all" = "Clear All";
-"newarchive.files.count" = "%d files";
-"newarchive.drop.here" = "Drop files here";
-"newarchive.drop.hint" = "Or drag and drop files from Finder";
+"newarchive.title" = "新建封存檔";
+"newarchive.add.files" = "加入檔案";
+"newarchive.add.folder" = "加入檔案夾";
+"newarchive.clear.all" = "全部清除";
+"newarchive.files.count" = "%d 個檔案";
+"newarchive.drop.here" = "在此處拖放檔案";
+"newarchive.drop.hint" = "或從 Finder 拖拽檔案到這裡";
 
-"newarchive.name.label" = "Name:";
-"newarchive.name.placeholder" = "Archive name";
-"newarchive.format.label" = "Format:";
-"newarchive.save.to.label" = "Save to:";
-"newarchive.browse" = "Browse";
-"newarchive.not.selected" = "Not selected";
+"newarchive.name.label" = "名稱：";
+"newarchive.name.placeholder" = "封存檔名稱";
+"newarchive.format.label" = "格式：";
+"newarchive.save.to.label" = "儲存到：";
+"newarchive.browse" = "瀏覽";
+"newarchive.not.selected" = "未選擇";
 
-"newarchive.encrypt" = "Encrypt Archive";
-"newarchive.password" = "Password";
-"newarchive.confirm.password" = "Confirm Password";
-"newarchive.password.mismatch" = "Passwords do not match";
+"newarchive.encrypt" = "加密封存檔";
+"newarchive.password" = "密碼";
+"newarchive.confirm.password" = "確認密碼";
+"newarchive.password.mismatch" = "密碼不符";
 
-"newarchive.cancel" = "Cancel";
-"newarchive.create" = "Create";
+"newarchive.cancel" = "取消";
+"newarchive.create" = "建立";
 
-"newarchive.format.zip" = "Universal, widely supported";
-"newarchive.format.tar" = "Unix/Linux tape archive";
-"newarchive.format.gz" = "GNU Zip compressed TAR";
-"newarchive.format.7z" = "High compression ratio";
-"newarchive.format.rar" = "RAR archive (requires rar tool)";
+"newarchive.format.zip" = "通用格式，廣泛支援";
+"newarchive.format.tar" = "Unix/Linux 磁帶封存檔";
+"newarchive.format.gz" = "GNU Zip 壓縮的 TAR";
+"newarchive.format.7z" = "高壓縮比";
+"newarchive.format.rar" = "RAR 封存檔（需要 rar 工具）";
 
 /* ========================================
-   Settings
+   設定
    ======================================== */
-"settings.title" = "Settings";
-"settings.tab.general" = "General";
-"settings.tab.tools" = "Tools";
-"settings.tab.updates" = "Updates";
-"settings.tab.about" = "About";
-"settings.tab.developer" = "Developer";
-"settings.close" = "Close";
+"settings.title" = "設定";
+"settings.tab.general" = "一般";
+"settings.tab.tools" = "工具";
+"settings.tab.updates" = "更新";
+"settings.tab.about" = "關於";
+"settings.tab.developer" = "開發者";
+"settings.close" = "關閉";
 
-/* --- General --- */
-"settings.general.title" = "General";
-"settings.general.language" = "Language";
-"settings.general.display.language" = "Display Language";
-"settings.general.restart.hint" = "Language change requires app restart";
-"settings.general.restart.title" = "Language Changed";
-"settings.general.restart.message" = "Restart to apply changes.";
-"settings.general.restart.now" = "Restart Now";
-"settings.general.restart.later" = "Later";
+/* --- 一般 --- */
+"settings.general.title" = "一般";
+"settings.general.language" = "語言";
+"settings.general.display.language" = "顯示語言";
+"settings.general.restart.hint" = "語言變更需要重新啟動應用程式";
+"settings.general.restart.title" = "語言已變更";
+"settings.general.restart.message" = "重新啟動以套用變更。";
+"settings.general.restart.now" = "立即重新啟動";
+"settings.general.restart.later" = "稍後";
 
-/* --- Tools --- */
-"settings.tools.title" = "Tools";
-"settings.tools.subtitle" = "Install and manage archive tools (7zz and RAR).";
-"settings.tools.status" = "Status:";
-"settings.tools.installed" = "All tools installed";
-"settings.tools.missing" = "%d tool(s) missing";
-"settings.tools.install" = "Install 7zz & RAR";
-"settings.tools.installing" = "Installing...";
-"settings.tools.delete" = "Delete Tools";
-"settings.tools.checking" = "Checking...";
-"settings.tools.description" = "7zz: Universal extractor (ZIP, RAR, 7Z, TAR, etc.)\nRAR: RAR compression and extraction";
+/* --- 工具 --- */
+"settings.tools.title" = "工具";
+"settings.tools.subtitle" = "安裝和管理封存工具（7zz 和 RAR）。";
+"settings.tools.status" = "狀態：";
+"settings.tools.installed" = "所有工具已安裝";
+"settings.tools.missing" = "缺少 %d 個工具";
+"settings.tools.install" = "安裝 7zz 和 RAR";
+"settings.tools.installing" = "安裝中...";
+"settings.tools.delete" = "刪除工具";
+"settings.tools.checking" = "檢查中...";
+"settings.tools.description" = "7zz：通用解壓縮工具（支援 ZIP、RAR、7Z、TAR 等）\nRAR：RAR 壓縮和擷取";
 
-"settings.tools.install.alert.title" = "Missing Tools";
-"settings.tools.install.alert.message" = "This app requires additional tools for archive operations:\n\n• 7zz: Universal extractor (supports ZIP, RAR, 7Z, TAR, etc.)\n• rar: RAR compression only\n\nClick Install to download and set up these tools.";
-"settings.tools.install.alert.install" = "Install All";
-"settings.tools.install.alert.cancel" = "Cancel";
+"settings.tools.install.alert.title" = "缺少工具";
+"settings.tools.install.alert.message" = "此應用程式需要額外的工具進行封存操作：\n\n• 7zz：通用解壓縮工具（支援 ZIP、RAR、7Z、TAR 等）\n• rar：僅 RAR 壓縮\n\n點擊安裝以下載並設定這些工具。";
+"settings.tools.install.alert.install" = "全部安裝";
+"settings.tools.install.alert.cancel" = "取消";
 
-"settings.tools.delete.confirm.title" = "Delete Tools";
-"settings.tools.delete.confirm.message" = "This will remove 7zz and rar tools from the app's support directory.";
-"settings.tools.delete.confirm.delete" = "Delete";
-"settings.tools.delete.confirm.cancel" = "Cancel";
+"settings.tools.delete.confirm.title" = "刪除工具";
+"settings.tools.delete.confirm.message" = "這將從應用程式的支援目錄中刪除 7zz 和 rar 工具。";
+"settings.tools.delete.confirm.delete" = "刪除";
+"settings.tools.delete.confirm.cancel" = "取消";
 
-"settings.tools.complete" = "Complete";
-"settings.tools.failed" = "Failed";
-"settings.tools.deleted" = "Deleted";
-"settings.tools.deleted.message" = "Tools removed. Restart required.";
-"settings.tools.delete.failed" = "Could not delete.";
+"settings.tools.complete" = "完成";
+"settings.tools.failed" = "失敗";
+"settings.tools.deleted" = "已刪除";
+"settings.tools.deleted.message" = "工具已刪除，需要重新啟動應用程式。";
+"settings.tools.delete.failed" = "無法刪除。";
 
-/* --- Updates --- */
-"settings.updates.title" = "Updates";
-"settings.updates.subtitle" = "Check for new versions and manage update settings.";
-"settings.updates.current.version" = "Current Version";
-"settings.updates.channel" = "Update Channel";
-"settings.updates.channel.stable" = "Stable (Recommended)";
-"settings.updates.channel.beta" = "Beta / RC";
-"settings.updates.channel.stable.desc" = "Only stable releases";
-"settings.updates.channel.beta.desc" = "Includes beta and release candidate versions";
-"settings.updates.auto.check" = "Auto-check";
-"settings.updates.auto.check.desc" = "Check for updates automatically";
-"settings.updates.check.button" = "Check for Updates";
-"settings.updates.checking" = "Checking...";
-"settings.updates.available" = "Version %@ available";
-"settings.updates.beta" = "(Beta)";
-"settings.updates.view" = "View";
-"settings.updates.downloading" = "Downloading... %d%%";
-"settings.updates.cancel" = "Cancel";
-"settings.updates.restarting" = "Restarting in %ds...";
-"settings.updates.footer" = "Updates are downloaded from GitHub Releases";
+/* --- 更新 --- */
+"settings.updates.title" = "更新";
+"settings.updates.subtitle" = "檢查新版本並管理更新設定。";
+"settings.updates.current.version" = "目前版本";
+"settings.updates.channel" = "更新頻道";
+"settings.updates.channel.stable" = "穩定版（建議）";
+"settings.updates.channel.beta" = "測試版 / RC";
+"settings.updates.channel.stable.desc" = "僅穩定版本";
+"settings.updates.channel.beta.desc" = "包含測試版和候選版本";
+"settings.updates.auto.check" = "自動檢查";
+"settings.updates.auto.check.desc" = "自動檢查更新";
+"settings.updates.check.button" = "檢查更新";
+"settings.updates.checking" = "檢查中...";
+"settings.updates.available" = "版本 %@ 可用";
+"settings.updates.beta" = "（測試版）";
+"settings.updates.view" = "檢視";
+"settings.updates.downloading" = "下載中... %d%%";
+"settings.updates.cancel" = "取消";
+"settings.updates.restarting" = "%d 秒後重新啟動...";
+"settings.updates.footer" = "更新從 GitHub Releases 下載";
 
-"settings.updates.no.update.title" = "No Update Available";
-"settings.updates.no.update.message" = "You are running the latest version.";
+"settings.updates.no.update.title" = "沒有可用更新";
+"settings.updates.no.update.message" = "您正在執行最新版本。";
 
-"settings.updates.new.available.title" = "New Version Available";
-"settings.updates.new.available.later" = "Later";
-"settings.updates.new.available.download" = "Download & Install";
+"settings.updates.new.available.title" = "有新版本可用";
+"settings.updates.new.available.later" = "稍後";
+"settings.updates.new.available.download" = "下載並安裝";
 
-"settings.updates.download.failed" = "Update Failed";
+"settings.updates.download.failed" = "更新失敗";
 
-/* --- About --- */
-"settings.about.title" = "About";
-"settings.about.version" = "Version %@";
-"settings.about.developer.mode" = "Developer Mode Active";
-"settings.about.license" = "MIT License • Open Source";
+/* --- 關於 --- */
+"settings.about.title" = "關於";
+"settings.about.version" = "版本 %@";
+"settings.about.developer.mode" = "開發者模式已啟用";
+"settings.about.license" = "MIT 授權條款 • 開源";
 
 /* ========================================
-   Help
+   輔助說明
    ======================================== */
-"help.title" = "Help";
-"help.search.placeholder" = "Search";
-"help.search.empty" = "No results found for \"%@\"";
-"help.close" = "Close";
+"help.title" = "輔助說明";
+"help.search.placeholder" = "搜尋";
+"help.search.empty" = "找不到 \"%@\" 的相關結果";
+"help.close" = "關閉";
 
-"help.item.open.archive" = "📦 Open Archive";
-"help.item.open.archive.desc1" = "Click 'Open Archive' or press ⌘O to open";
-"help.item.open.archive.desc2" = "Supported: ZIP, TAR, GZ, 7Z, RAR";
+"help.item.open.archive" = "📦 開啟封存檔";
+"help.item.open.archive.desc1" = "點擊「開啟封存檔」或按 ⌘O 開啟";
+"help.item.open.archive.desc2" = "支援：ZIP、TAR、GZ、7Z、RAR";
 
-"help.item.new.archive" = "🆕 New Archive";
-"help.item.new.archive.desc1" = "Click 'New Archive' or press ⌘A to create";
-"help.item.new.archive.desc2" = "Add files, choose format, select destination";
+"help.item.new.archive" = "🆕 新建封存檔";
+"help.item.new.archive.desc1" = "點擊「新建封存檔」或按 ⌘A 建立";
+"help.item.new.archive.desc2" = "加入檔案、選擇格式、選擇目標位置";
 
-"help.item.extract" = "📤 Extract";
-"help.item.extract.desc1" = "Select files, click 'Extract'";
-"help.item.extract.desc2" = "Supports all formats";
+"help.item.extract" = "📤 擷取";
+"help.item.extract.desc1" = "選擇檔案，點擊「擷取」";
+"help.item.extract.desc2" = "支援所有格式";
 
-"help.item.modify" = "✏️ Modify";
-"help.item.modify.desc1" = "Drag files to add";
-"help.item.modify.desc2" = "Right-click to delete";
+"help.item.modify" = "✏️ 修改";
+"help.item.modify.desc1" = "拖拽檔案加入";
+"help.item.modify.desc2" = "右鍵點擊刪除";
 
-"help.item.settings" = "⚙️ Settings";
-"help.item.settings.desc1" = "Change language, install tools";
-"help.item.settings.desc2" = "Press ⌘, to open settings";
+"help.item.settings" = "⚙️ 設定";
+"help.item.settings.desc1" = "變更語言、安裝工具";
+"help.item.settings.desc2" = "按 ⌘, 開啟設定";
 
-"help.item.shortcuts" = "⌨️ Shortcuts";
-"help.item.shortcuts.desc1" = "⌘A - New Archive";
-"help.item.shortcuts.desc2" = "⌘O - Open Archive";
-"help.item.shortcuts.desc3" = "⌘, - Settings";
-"help.item.shortcuts.desc4" = "⌘? - Help";
+"help.item.shortcuts" = "⌨️ 快速鍵";
+"help.item.shortcuts.desc1" = "⌘A - 新建封存檔";
+"help.item.shortcuts.desc2" = "⌘O - 開啟封存檔";
+"help.item.shortcuts.desc3" = "⌘, - 設定";
+"help.item.shortcuts.desc4" = "⌘? - 輔助說明";
 
 /* ========================================
-   Developer Mode
+   開發者模式
    ======================================== */
-"developer.title" = "Developer";
-"developer.subtitle" = "Tools for developers and advanced users";
+"developer.title" = "開發者";
+"developer.subtitle" = "面向開發者和進階使用者的工具";
 
-"developer.category.debug" = "Debug";
-"developer.category.experimental" = "Experimental";
-"developer.category.unstable" = "Unstable";
-"developer.category.advanced" = "Advanced";
+"developer.category.debug" = "除錯";
+"developer.category.experimental" = "實驗性";
+"developer.category.unstable" = "不穩定";
+"developer.category.advanced" = "進階";
 
-"developer.category.debug.desc" = "Debugging tools and diagnostics";
-"developer.category.experimental.desc" = "Experimental features (may change or be removed)";
-"developer.category.unstable.desc" = "Unstable features (may crash or lose data)";
-"developer.category.advanced.desc" = "Advanced settings for power users";
+"developer.category.debug.desc" = "除錯工具和診斷";
+"developer.category.experimental.desc" = "實驗性功能（可能變更或移除）";
+"developer.category.unstable.desc" = "不穩定功能（可能導致當機或資料遺失）";
+"developer.category.advanced.desc" = "進階使用者設定";
 
-/* --- Debug --- */
-"developer.debug.logging" = "Logging";
-"developer.debug.logging.enable" = "Enable Debug Logging";
-"developer.debug.logging.desc" = "Log all operations to console and developer panel";
-"developer.debug.show.hidden" = "Show Hidden Files";
-"developer.debug.show.hidden.desc" = "Show .DS_Store, .localized and other hidden files";
-"developer.debug.export.logs" = "Export Debug Logs";
-"developer.debug.clear.logs" = "Clear Logs";
-"developer.debug.view.console" = "View Logs in Console";
+/* --- 除錯 --- */
+"developer.debug.logging" = "日誌";
+"developer.debug.logging.enable" = "啟用除錯日誌";
+"developer.debug.logging.desc" = "記錄所有操作到主控台和開發者面板";
+"developer.debug.show.hidden" = "顯示隱藏檔案";
+"developer.debug.show.hidden.desc" = "顯示 .DS_Store、.localized 及其他隱藏檔案";
+"developer.debug.export.logs" = "匯出除錯日誌";
+"developer.debug.clear.logs" = "清除日誌";
+"developer.debug.view.console" = "在主控台檢視日誌";
 
-"developer.debug.tool.paths" = "Tool Paths";
-"developer.debug.custom.paths" = "Use Custom Tool Paths";
-"developer.debug.path.7zz" = "7zz Path:";
-"developer.debug.path.rar" = "RAR Path:";
-"developer.debug.path.browse" = "Browse";
-"developer.debug.path.restart.hint" = "⚠️ Changes will take effect after app restart";
+"developer.debug.tool.paths" = "工具路徑";
+"developer.debug.custom.paths" = "使用自訂工具路徑";
+"developer.debug.path.7zz" = "7zz 路徑：";
+"developer.debug.path.rar" = "RAR 路徑：";
+"developer.debug.path.browse" = "瀏覽";
+"developer.debug.path.restart.hint" = "⚠️ 變更將在應用程式重新啟動後生效";
 
-"developer.debug.test.operations" = "Test Operations";
-"developer.debug.test.load" = "Simulate Archive Load";
-"developer.debug.test.error" = "Simulate Extraction Error";
-"developer.debug.test.tools" = "Test Tool Paths";
+"developer.debug.test.operations" = "測試操作";
+"developer.debug.test.load" = "模擬載入封存檔";
+"developer.debug.test.error" = "模擬擷取錯誤";
+"developer.debug.test.tools" = "測試工具路徑";
 
-/* --- Experimental --- */
-"developer.experimental.title" = "Experimental Features";
-"developer.experimental.parallel" = "Parallel Extraction";
-"developer.experimental.parallel.desc" = "Extract multiple files simultaneously for faster performance";
-"developer.experimental.new.engine" = "New Extraction Engine";
-"developer.experimental.new.engine.desc" = "Use the new extraction engine with better performance";
-"developer.experimental.fast.zip" = "Fast ZIP Processing";
-"developer.experimental.fast.zip.desc" = "Skip CRC check for faster ZIP extraction (less reliable)";
-"developer.experimental.warning" = "⚠️ These features are experimental and may change or be removed";
+/* --- 實驗性 --- */
+"developer.experimental.title" = "實驗性功能";
+"developer.experimental.parallel" = "並行擷取";
+"developer.experimental.parallel.desc" = "同時擷取多個檔案以提高效能";
+"developer.experimental.new.engine" = "新擷取引擎";
+"developer.experimental.new.engine.desc" = "使用效能更好的新擷取引擎";
+"developer.experimental.fast.zip" = "快速 ZIP 處理";
+"developer.experimental.fast.zip.desc" = "跳過 CRC 檢查以加快 ZIP 擷取（可靠性較低）";
+"developer.experimental.warning" = "⚠️ 這些功能是實驗性的，可能變更或移除";
 
-/* --- Unstable --- */
-"developer.unstable.title" = "Unstable Features";
-"developer.unstable.async" = "Async File Writing";
-"developer.unstable.async.desc" = "Write files asynchronously (may cause data loss if app crashes)";
-"developer.unstable.memory" = "In-Memory Extraction";
-"developer.unstable.memory.desc" = "Extract directly to memory (high RAM usage, may crash on large files)";
-"developer.unstable.skip.permissions" = "Skip Permission Checks";
-"developer.unstable.skip.permissions.desc" = "Bypass file permission checks (security risk)";
-"developer.unstable.warning" = "⚠️⚠️ WARNING: These features are unstable and may cause crashes or data loss ⚠️⚠️";
+/* --- 不穩定 --- */
+"developer.unstable.title" = "不穩定功能";
+"developer.unstable.async" = "非同步檔案寫入";
+"developer.unstable.async.desc" = "非同步寫入檔案（應用程式當機時可能導致資料遺失）";
+"developer.unstable.memory" = "記憶體擷取";
+"developer.unstable.memory.desc" = "直接擷取到記憶體（高記憶體佔用，大檔案可能當機）";
+"developer.unstable.skip.permissions" = "跳過權限檢查";
+"developer.unstable.skip.permissions.desc" = "繞過檔案權限檢查（安全風險）";
+"developer.unstable.warning" = "⚠️⚠️ 警告：這些功能不穩定，可能導致當機或資料遺失 ⚠️⚠️";
 
-/* --- Advanced --- */
-"developer.advanced.title" = "Performance Settings";
-"developer.advanced.memory.limit" = "Memory Limit (MB):";
-"developer.advanced.memory.apply" = "Apply";
-"developer.advanced.memory.desc" = "Maximum memory usage during extraction";
-"developer.advanced.temp.dir" = "Temp Directory:";
-"developer.advanced.temp.browse" = "Browse";
-"developer.advanced.temp.apply" = "Apply";
-"developer.advanced.temp.desc" = "Custom temporary directory for extraction (restart required)";
-"developer.advanced.max.concurrent" = "Max Concurrent Operations:";
-"developer.advanced.max.concurrent.desc" = "Maximum number of parallel operations";
+/* --- 進階 --- */
+"developer.advanced.title" = "效能設定";
+"developer.advanced.memory.limit" = "記憶體限制（MB）：";
+"developer.advanced.memory.apply" = "套用";
+"developer.advanced.memory.desc" = "擷取時的最大記憶體使用量";
+"developer.advanced.temp.dir" = "暫存目錄：";
+"developer.advanced.temp.browse" = "瀏覽";
+"developer.advanced.temp.apply" = "套用";
+"developer.advanced.temp.desc" = "自訂擷取暫存目錄（需要重新啟動）";
+"developer.advanced.max.concurrent" = "最大並行操作數：";
+"developer.advanced.max.concurrent.desc" = "最大並行操作數量";
 
-"developer.advanced.danger" = "Danger Zone";
-"developer.advanced.reset" = "Reset All Settings";
-"developer.advanced.clear.cache" = "Clear All Cache";
-"developer.advanced.open.support" = "Open App Support Directory";
+"developer.advanced.danger" = "危險區域";
+"developer.advanced.reset" = "重設所有設定";
+"developer.advanced.clear.cache" = "清除所有快取";
+"developer.advanced.open.support" = "開啟應用程式支援目錄";
 
 /* ========================================
-   Updates (System)
+   更新（系統）
    ======================================== */
-"update.checking" = "Checking for updates...";
-"update.available" = "Update available!";
-"update.none" = "No update available";
-"update.downloading" = "Downloading...";
-"update.extracting" = "Extracting...";
-"update.installing" = "Installing...";
-"update.restart" = "Restarting in %ds...";
-"update.complete" = "Update complete";
+"update.checking" = "正在檢查更新...";
+"update.available" = "有可用更新！";
+"update.none" = "沒有可用更新";
+"update.downloading" = "下載中...";
+"update.extracting" = "解壓縮中...";
+"update.installing" = "安裝中...";
+"update.restart" = "%d 秒後重新啟動...";
+"update.complete" = "更新完成";
 
 /* ========================================
-   Tools Installer
+   工具安裝
    ======================================== */
-"tools.installing" = "Installing %@...";
-"tools.install.complete" = "Installation complete";
+"tools.installing" = "正在安裝 %@...";
+"tools.install.complete" = "安裝完成";
 
 /* ========================================
-   Errors & Alerts
+   錯誤 & 提醒
    ======================================== */
-"error.unsupported.format" = "Unsupported archive format";
-"error.tool.not.found" = "Required tool not found: %@";
-"error.command.failed" = "Command failed: %@";
-"error.password.required" = "Password required for this archive";
-"error.unknown" = "An unknown error occurred";
+"error.unsupported.format" = "不支援的封存格式";
+"error.tool.not.found" = "找不到所需工具：%@";
+"error.command.failed" = "命令執行失敗：%@";
+"error.password.required" = "此封存檔需要密碼";
+"error.unknown" = "發生未知錯誤";
 
-"alert.ok" = "OK";
-"alert.done" = "Done";
+"alert.ok" = "確定";
+"alert.done" = "完成";
