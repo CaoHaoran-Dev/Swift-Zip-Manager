@@ -76,4 +76,4 @@ macOS 压缩文件管理器，Swift + SwiftUI 实现。
 
 MIT License
 
-[English](README.md)
+[English](../README.md)
