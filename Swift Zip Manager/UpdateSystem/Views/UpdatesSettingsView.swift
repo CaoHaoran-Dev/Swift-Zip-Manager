@@ -42,10 +42,6 @@ struct UpdatesSettingsView: View {
                     downloadProgressRow
                 }
                 
-                if updateChecker.showUpdateAlert {
-                    restartingRow
-                }
-                
                 updateInfoFooter
             }
         }
@@ -165,18 +161,6 @@ struct UpdatesSettingsView: View {
     }
     
     @ViewBuilder
-    private var restartingRow: some View {
-        HStack {
-            Image(systemName: "clock.fill")
-                .foregroundColor(.blue)
-            Text(String(format: "settings.updates.restarting".localized, updateChecker.countdownSeconds))
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding(.leading, 148)
-    }
-    
-    @ViewBuilder
     private var updateInfoFooter: some View {
         Text("settings.updates.footer".localized)
             .font(.caption)
@@ -185,18 +169,16 @@ struct UpdatesSettingsView: View {
     }
     
     private func checkForUpdates() {
-        // ✅ 检查时先清除之前的更新状态
+        // 检查时先清除之前的更新状态
         updateChecker.updateAvailable = nil
         
         updateChecker.checkForUpdates(
             includePrerelease: includePrereleaseUpdates,
-            showIfNone: false  // ✅ 不在这里弹窗，由 completion 处理
+            showIfNone: false
         ) { hasUpdate, message in
             if hasUpdate {
-                // ✅ 有更新：显示更新 Sheet
                 showUpdateSheet = true
             } else {
-                // ✅ 没有更新：显示一个 Alert
                 showNoUpdateAlert = true
             }
         }
