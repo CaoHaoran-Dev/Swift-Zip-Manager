@@ -42,6 +42,8 @@ struct EmptyStateView: View {
                 Text(message)
                     .font(.caption)
                     .foregroundColor(.secondary.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
             }
             
             if let action = action, let actionTitle = actionTitle {

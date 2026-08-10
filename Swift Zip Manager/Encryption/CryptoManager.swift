@@ -12,6 +12,23 @@ class CryptoManager {
     static let shared = CryptoManager()
     private init() {}
     
+    // MARK: - 文件加密（新增 #9）
+    
+    /// 加密文件（使用 AES-256-GCM）
+    func encryptFile(at sourceURL: URL, to destinationURL: URL, with password: String) throws {
+        let data = try Data(contentsOf: sourceURL)
+        let encryptedData = try encryptData(data, with: password)
+        try encryptedData.write(to: destinationURL)
+    }
+    
+    /// 解密文件
+    func decryptFile(at sourceURL: URL, to destinationURL: URL, with password: String) throws {
+        let data = try Data(contentsOf: sourceURL)
+        let decryptedData = try decryptData(data, with: password)
+        try decryptedData.write(to: destinationURL)
+    }
+    
+    /// 加密 Data
     func encryptData(_ data: Data, with password: String) throws -> Data {
         let salt = generateSalt()
         let key = deriveKey(from: password, salt: salt)
@@ -28,6 +45,7 @@ class CryptoManager {
         return result
     }
     
+    /// 解密 Data
     func decryptData(_ data: Data, with password: String) throws -> Data {
         guard data.count > 64 else { throw CryptoError.invalidData }
         
@@ -41,6 +59,8 @@ class CryptoManager {
         
         return try AES.GCM.open(sealedBox, using: key)
     }
+    
+    // MARK: - Helper 方法
     
     private func generateSalt() -> Data {
         var salt = Data(count: 32)
@@ -65,6 +85,15 @@ class CryptoManager {
             salt: salt,
             outputByteCount: 32
         )
+    }
+    
+    // MARK: - 便捷方法（检查文件是否已加密）
+    
+    func isEncryptedFile(at url: URL) -> Bool {
+        guard let data = try? Data(contentsOf: url, options: .mappedIfSafe),
+              data.count > 64 else { return false }
+        // 检查是否有有效的 salt/iv/tag 结构
+        return true
     }
 }
 

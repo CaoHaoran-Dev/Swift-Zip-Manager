@@ -71,11 +71,17 @@ extension Bundle {
         currentBundle = bundle
     }
     
+    // ✅ #10: 增加 fallback，如果找不到 key 返回 key 本身
     static func localizedString(forKey key: String, value: String?, table: String?) -> String {
         if let bundle = currentBundle {
-            return bundle.localizedString(forKey: key, value: value, table: table)
+            let result = bundle.localizedString(forKey: key, value: value, table: table)
+            // 如果结果等于 key，说明没有找到本地化字符串，尝试从主 bundle 获取
+            if result == key {
+                return Bundle.main.localizedString(forKey: key, value: key, table: table)
+            }
+            return result
         }
-        return Bundle.main.localizedString(forKey: key, value: value, table: table)
+        return Bundle.main.localizedString(forKey: key, value: key, table: table)
     }
 }
 

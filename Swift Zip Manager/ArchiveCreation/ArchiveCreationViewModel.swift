@@ -11,7 +11,6 @@ class ArchiveCreationViewModel: ObservableObject {
     @Published var files: [URL] = []
     @Published var format = "zip" {
         didSet {
-            // 格式变化时自动更新名称后缀
             updateNameSuggestion()
         }
     }
@@ -29,14 +28,29 @@ class ArchiveCreationViewModel: ObservableObject {
         format == "zip" || format == "7z" || format == "rar"
     }
     
+    // MARK: - 创建按钮启用条件（修复版）
+    
     var canCreate: Bool {
-        !files.isEmpty && destination != nil && (!encryptArchive || !encryptionPassword.isEmpty)
+        // 基础条件：有文件 + 有目标路径
+        guard !files.isEmpty, destination != nil else {
+            return false
+        }
+        
+        // 加密开启时：密码不能为空
+        if encryptArchive {
+            guard !encryptionPassword.isEmpty else {
+                return false
+            }
+            // ✅ 新增：密码和确认密码必须匹配
+            guard encryptionPassword == confirmPassword else {
+                return false
+            }
+        }
+        
+        return true
     }
     
-    init() {
-        // 如果有文件，自动生成名称
-        updateNameSuggestion()
-    }
+    // MARK: - 密码验证（用于点击 Create 后的额外校验）
     
     func validatePassword() -> Bool {
         if encryptArchive {
@@ -48,8 +62,11 @@ class ArchiveCreationViewModel: ObservableObject {
                 return false
             }
         }
+        showPasswordMismatch = false
         return true
     }
+    
+    // MARK: - 文件管理
     
     func addFiles(_ urls: [URL]) {
         files.append(contentsOf: urls)
@@ -83,6 +100,7 @@ class ArchiveCreationViewModel: ObservableObject {
     }
     
     // MARK: - 名称自动建议
+    
     private func updateNameSuggestion() {
         if name.isEmpty && !files.isEmpty {
             let firstFileName = files.first?.deletingPathExtension().lastPathComponent ?? "Archive"
@@ -91,6 +109,7 @@ class ArchiveCreationViewModel: ObservableObject {
     }
     
     // MARK: - 保存/加载上次路径
+    
     func saveLastDestination(_ url: URL) {
         UserDefaults.standard.set(url.path, forKey: lastDestinationKey)
     }
@@ -106,7 +125,6 @@ class ArchiveCreationViewModel: ObservableObject {
             }
         }
         
-        // 如果没有保存的路径或路径无效，使用桌面
         if destination == nil {
             destination = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first
         }

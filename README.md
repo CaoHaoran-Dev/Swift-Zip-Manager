@@ -2,7 +2,7 @@
 
 macOS archive file manager, built with Swift + SwiftUI.
 
-> Current Version: 1.0.0-Beta.7 · In Development
+> Current Version: 1.0.0-Beta.8 · In Development
 
 ## Features
 

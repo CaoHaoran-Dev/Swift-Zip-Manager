@@ -10,45 +10,93 @@ import Foundation
 class ToolPathResolver {
     private let fileManager = FileManager.default
     
+    // ✅ #18: 缓存机制
+    private var cache: [String: String] = [:]
+    private var cacheTimestamp: Date?
+    private let cacheExpiry: TimeInterval = 5.0 // 5秒缓存过期
+    
+    /// 应用支持目录下的工具路径
+    private var appSupportToolsPath: String {
+        let home = fileManager.homeDirectoryForCurrentUser.path
+        let path = "\(home)/Library/Application Support/com.haoran.Swift-Zip-Manager/tools"
+        try? fileManager.createDirectory(atPath: path, withIntermediateDirectories: true)
+        return path
+    }
+    
+    /// ✅ #19: 系统 PATH 搜索路径
+    private var systemPaths: [String] {
+        let pathEnv = ProcessInfo.processInfo.environment["PATH"] ?? ""
+        return pathEnv.split(separator: ":").map { String($0) }
+    }
+    
+    /// ✅ #18: 清除缓存
+    func invalidateCache() {
+        cache.removeAll()
+        cacheTimestamp = nil
+        print("🔄 Tool cache invalidated")
+    }
+    
+    /// 获取工具的完整路径（检测 App Support + 系统 PATH）
     func resolve(_ command: String) -> String? {
-        // 1. 检查开发者自定义路径
-        if let customPath = getCustomPath(for: command), !customPath.isEmpty {
-            if fileManager.fileExists(atPath: customPath) {
-                return customPath
+        // ✅ #18: 检查缓存
+        if let cached = cache[command],
+           let timestamp = cacheTimestamp,
+           Date().timeIntervalSince(timestamp) < cacheExpiry {
+            if fileManager.fileExists(atPath: cached) {
+                return cached
             }
         }
         
-        // 2. 检查应用支持目录
-        if let appPath = getAppSupportPath(for: command) {
-            return appPath
+        // 1. 检测 App Support
+        let appSupportPath = "\(appSupportToolsPath)/\(command)"
+        if fileManager.fileExists(atPath: appSupportPath) {
+            if fileManager.isExecutableFile(atPath: appSupportPath) {
+                print("✅ Found \(command) in App Support: \(appSupportPath)")
+                cache[command] = appSupportPath
+                cacheTimestamp = Date()
+                return appSupportPath
+            } else {
+                try? fileManager.setAttributes([.posixPermissions: 0o755], ofItemAtPath: appSupportPath)
+                if fileManager.isExecutableFile(atPath: appSupportPath) {
+                    print("✅ Fixed permissions for \(command) in App Support")
+                    cache[command] = appSupportPath
+                    cacheTimestamp = Date()
+                    return appSupportPath
+                }
+            }
         }
         
-        // 3. 检查系统路径
-        return getSystemPath(for: command)
+        // ✅ #19: 2. 检测系统 PATH
+        for systemPath in systemPaths {
+            let fullPath = "\(systemPath)/\(command)"
+            if fileManager.fileExists(atPath: fullPath) && fileManager.isExecutableFile(atPath: fullPath) {
+                print("✅ Found \(command) in system PATH: \(fullPath)")
+                cache[command] = fullPath
+                cacheTimestamp = Date()
+                return fullPath
+            }
+        }
+        
+        print("❌ \(command) not found in App Support or system PATH")
+        return nil
     }
     
-    private func getCustomPath(for command: String) -> String? {
-        let key = command == "7zz" ? "CustomToolPath7zz" : "CustomToolPathRar"
-        guard UserDefaults.standard.bool(forKey: "UseCustomToolPaths") else { return nil }
-        return UserDefaults.standard.string(forKey: key)
-    }
-    
-    private func getAppSupportPath(for command: String) -> String? {
-        let home = fileManager.homeDirectoryForCurrentUser.path
-        let path = "\(home)/Library/Application Support/com.haoran.Swift-Zip-Manager/tools/\(command)"
-        return fileManager.fileExists(atPath: path) ? path : nil
-    }
-    
-    private func getSystemPath(for command: String) -> String? {
-        #if arch(arm64)
-            let paths = ["/opt/local/bin/\(command)", "/usr/local/bin/\(command)"]
-        #else
-            let paths = ["/usr/local/bin/\(command)"]
-        #endif
-        return paths.first { fileManager.fileExists(atPath: $0) }
-    }
-    
+    /// 检查工具是否已安装
     func isInstalled(_ command: String) -> Bool {
         return resolve(command) != nil
+    }
+    
+    /// 获取缺失的工具
+    func getMissingTools() -> [String] {
+        var missing: [String] = []
+        if !isInstalled("7zz") { missing.append("7zz") }
+        if !isInstalled("rar") { missing.append("rar") }
+        return missing
+    }
+    
+    /// 检查所有工具是否就绪
+    func checkToolsReady() -> (allReady: Bool, missing: [String]) {
+        let missing = getMissingTools()
+        return (missing.isEmpty, missing)
     }
 }

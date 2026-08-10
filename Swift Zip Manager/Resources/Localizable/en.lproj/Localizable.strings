@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Swift Zip Manager
 
@@ -70,6 +70,14 @@
 "browser.loading" = "Loading...";
 
 /* ========================================
+   File Browser (批次6 新增)
+   ======================================== */
+"filebrowser.loading" = "Loading...";
+"filebrowser.empty.title" = "Empty Folder";
+"filebrowser.empty.message" = "This folder is empty";
+"filebrowser.empty.browse" = "Browse...";
+
+/* ========================================
    Archive Content
    ======================================== */
 "archive.items" = "%d items";
@@ -86,8 +94,24 @@
 
 "archive.extraction.complete" = "Extraction complete: %@";
 "archive.extraction.failed" = "Extraction failed: %@";
+"archive.extraction.timeout" = "Extraction timed out";
 "archive.creation.success" = "Archive created successfully";
 "archive.creation.failed" = "Creation failed: %@";
+
+/* ========================================
+   Archive Delete (批次2 新增)
+   ======================================== */
+"archive.deleting" = "Deleting...";
+"archive.delete.success" = "Successfully deleted %d file(s)";
+"archive.delete.all.failed" = "Failed to delete all files";
+"archive.delete.partial" = "Deleted %d of %d files";
+"archive.delete.failed" = "Delete failed";
+
+/* ========================================
+   File Operations (批次6 新增)
+   ======================================== */
+"file.delete.failed" = "Failed to delete file";
+"file.delete.success" = "File deleted successfully";
 
 /* ========================================
    New Archive
@@ -153,6 +177,7 @@
 "settings.tools.delete" = "Delete Tools";
 "settings.tools.checking" = "Checking...";
 "settings.tools.description" = "7zz: Universal extractor (ZIP, RAR, 7Z, TAR, etc.)\nRAR: RAR compression and extraction";
+"settings.tools.downloading" = "Downloading...";
 
 "settings.tools.install.alert.title" = "Missing Tools";
 "settings.tools.install.alert.message" = "This app requires additional tools for archive operations:\n\n• 7zz: Universal extractor (supports ZIP, RAR, 7Z, TAR, etc.)\n• rar: RAR compression only\n\nClick Install to download and set up these tools.";
@@ -277,6 +302,7 @@
 "developer.debug.test.load" = "Simulate Archive Load";
 "developer.debug.test.error" = "Simulate Extraction Error";
 "developer.debug.test.tools" = "Test Tool Paths";
+"developer.debug.test.switches" = "Show Switch Status";
 
 /* --- Experimental --- */
 "developer.experimental.title" = "Experimental Features";

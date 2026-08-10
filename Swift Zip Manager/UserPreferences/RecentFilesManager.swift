@@ -12,49 +12,67 @@ class RecentFilesManager: ObservableObject {
     private let maxCount = AppConstants.maxRecentFiles
     private let key = "RecentFiles"
     
+    // ✅ #9: 使用串行队列保证线程安全
+    private let queue = DispatchQueue(label: "com.haoran.SwiftZipManager.recentFiles")
+    
     init() {
         loadData()
     }
     
     func loadData() {
-        if let data = UserDefaults.standard.data(forKey: key),
-           let files = try? JSONDecoder().decode([RecentFile].self, from: data) {
-            DispatchQueue.main.async {
-                self.recentFiles = files
+        queue.async {
+            if let data = UserDefaults.standard.data(forKey: self.key),
+               let files = try? JSONDecoder().decode([RecentFile].self, from: data) {
+                DispatchQueue.main.async {
+                    self.recentFiles = files
+                }
             }
         }
     }
     
     func add(_ url: URL) {
-        var files = recentFiles
-        files.removeAll { $0.url.path == url.path }
-        let newFile = RecentFile(url: url)
-        files.insert(newFile, at: 0)
-        if files.count > maxCount {
-            files = Array(files.prefix(maxCount))
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            var files = self.recentFiles
+            // 去重（按路径）
+            files.removeAll { $0.url.path == url.path }
+            let newFile = RecentFile(url: url)
+            files.insert(newFile, at: 0)
+            if files.count > self.maxCount {
+                files = Array(files.prefix(self.maxCount))
+            }
+            
+            DispatchQueue.main.async {
+                self.recentFiles = files
+            }
+            self.saveData(files)
         }
-        
-        DispatchQueue.main.async {
-            self.recentFiles = files
-        }
-        saveData(files)
     }
     
     func remove(at indexSet: IndexSet) {
-        var files = recentFiles
-        files.remove(atOffsets: indexSet)
-        
-        DispatchQueue.main.async {
-            self.recentFiles = files
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            var files = self.recentFiles
+            files.remove(atOffsets: indexSet)
+            
+            DispatchQueue.main.async {
+                self.recentFiles = files
+            }
+            self.saveData(files)
         }
-        saveData(files)
     }
     
     func clear() {
-        DispatchQueue.main.async {
-            self.recentFiles = []
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.recentFiles = []
+            }
+            UserDefaults.standard.removeObject(forKey: self.key)
         }
-        UserDefaults.standard.removeObject(forKey: key)
     }
     
     func refresh() {

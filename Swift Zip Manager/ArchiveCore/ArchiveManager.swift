@@ -23,6 +23,14 @@ class ArchiveManager: ObservableObject {
     private let creator = ArchiveCreator()
     private let toolResolver = ToolPathResolver()
     
+    // ✅ #21: 绑定 AppState
+    weak var appState: AppState? {
+        didSet {
+            extractor.appState = appState
+            creator.appState = appState
+        }
+    }
+    
     func loadArchive(_ url: URL, recentManager: RecentFilesManager? = nil) {
         currentArchive = url
         recentManager?.add(url)
@@ -43,7 +51,7 @@ class ArchiveManager: ObservableObject {
         }
     }
     
-    func extractArchive(to destination: URL) {
+    func extractArchive(to destination: URL, password: String? = nil) {
         guard let source = currentArchive else { return }
         
         DispatchQueue.main.async {
@@ -51,14 +59,7 @@ class ArchiveManager: ObservableObject {
             self.progress = 0
         }
         
-        let ext = source.pathExtension.lowercased()
-        if ext == "rar" || ext == "7z" {
-            promptForPassword { [weak self] password in
-                self?.performExtract(source, to: destination, password: password)
-            }
-        } else {
-            performExtract(source, to: destination, password: nil)
-        }
+        performExtract(source, to: destination, password: password)
     }
     
     private func performExtract(_ source: URL, to destination: URL, password: String?) {
@@ -70,28 +71,14 @@ class ArchiveManager: ObservableObject {
                 case .success:
                     self?.error = String(format: "archive.extraction.complete".localized, source.lastPathComponent)
                 case .failure(let error):
-                    self?.error = "archive.extraction.failed".localized + ": " + error.localizedDescription
+                    if error.isPasswordError {
+                        self?.error = "archive.password.wrong".localized
+                    } else {
+                        self?.error = "archive.extraction.failed".localized + ": " + error.localizedDescription
+                    }
                 }
                 self?.showAlert = true
             }
-        }
-    }
-    
-    private func promptForPassword(completion: @escaping (String?) -> Void) {
-        let alert = NSAlert()
-        alert.messageText = "archive.password.required".localized
-        alert.informativeText = "archive.password.message".localized
-        
-        let textField = NSSecureTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
-        alert.accessoryView = textField
-        alert.addButton(withTitle: "archive.password.extract".localized)
-        alert.addButton(withTitle: "archive.password.cancel".localized)
-        
-        let response = alert.runModal()
-        if response == .alertFirstButtonReturn {
-            completion(textField.stringValue)
-        } else {
-            completion(nil)
         }
     }
     

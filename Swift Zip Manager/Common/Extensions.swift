@@ -45,3 +45,22 @@ extension ByteCountFormatter {
         return ByteCountFormatter.string(fromByteCount: count, countStyle: .file)
     }
 }
+
+// MARK: - Process 超时扩展
+
+extension Process {
+    /// 带超时的 run，超时后自动终止进程
+    func runWithTimeout(seconds: TimeInterval = 120) throws {
+        try run()
+        
+        let startTime = Date()
+        while isRunning {
+            if Date().timeIntervalSince(startTime) > seconds {
+                terminate()
+                waitUntilExit()
+                throw ArchiveError.timeout
+            }
+            Thread.sleep(forTimeInterval: 0.1)
+        }
+    }
+}

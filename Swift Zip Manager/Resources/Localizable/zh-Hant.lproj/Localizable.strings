@@ -1,5 +1,5 @@
-/* 
-  Localizable.strings
+/*
+  Localizable.strings (繁體中文)
   Swift Zip Manager
 
   Created by Haoran on 2026/8/9.
@@ -7,122 +7,146 @@
 */
 
 /* ========================================
-   應用程式名稱 & 通用
+   App Name & General
    ======================================== */
 "app.name" = "Swift Zip Manager";
 "app.version" = "版本";
 "app.unknown" = "未知";
 
 /* ========================================
-   選單列
+   Menu Bar
    ======================================== */
 "menu.file" = "檔案";
 "menu.edit" = "編輯";
 "menu.view" = "檢視";
 "menu.app" = "應用程式";
-"menu.help" = "輔助說明";
+"menu.help" = "幫助";
 
-"menu.new.archive" = "新建封存檔";
-"menu.open.archive" = "開啟封存檔";
+"menu.new.archive" = "新建壓縮檔";
+"menu.open.archive" = "開啟壓縮檔";
 "menu.new.window" = "新增視窗";
 "menu.close.window" = "關閉視窗";
 
-"menu.extract.selected" = "擷取所選";
-"menu.extract.all" = "全部擷取";
-"menu.delete.from.archive" = "從封存檔中刪除";
+"menu.extract.selected" = "解壓縮所選項目";
+"menu.extract.all" = "解壓縮全部";
+"menu.delete.from.archive" = "從壓縮檔中刪除";
 "menu.show.in.finder" = "在 Finder 中顯示";
 
 "menu.settings" = "設定...";
 "menu.check.updates" = "檢查更新...";
-"menu.help.contents" = "Swift Zip Manager 輔助說明";
+"menu.help.contents" = "Swift Zip Manager 說明";
 
 /* ========================================
-   側邊欄
+   Sidebar
    ======================================== */
 "sidebar.quick.actions" = "快速操作";
-"sidebar.new.archive" = "新建封存檔";
-"sidebar.open.archive" = "開啟封存檔";
+"sidebar.new.archive" = "新建壓縮檔";
+"sidebar.open.archive" = "開啟壓縮檔";
 
 "sidebar.locations" = "位置";
 "sidebar.desktop" = "桌面";
 "sidebar.documents" = "文件";
-"sidebar.downloads" = "下載項目";
-"sidebar.home" = "個人專屬";
+"sidebar.downloads" = "下載";
+"sidebar.home" = "個人";
 
 "sidebar.volumes" = "卷宗";
-"sidebar.recent" = "最近使用";
+"sidebar.recent" = "最近";
 "sidebar.clear.all" = "全部清除";
 "sidebar.settings" = "設定";
 
 /* ========================================
-   右側內容 / 檔案瀏覽器
+   Right Content / File Browser
    ======================================== */
-"browser.go.up" = "向上";
-"browser.extract.all" = "全部擷取";
+"browser.go.up" = "上一層";
+"browser.extract.all" = "全部解壓縮";
 "browser.view.list" = "列表檢視";
-"browser.view.grid" = "格狀檢視";
+"browser.view.grid" = "網格檢視";
 
 "browser.column.name" = "名稱";
 "browser.column.size" = "大小";
 "browser.column.modified" = "修改日期";
 
-"browser.empty.folder" = "空檔案夾";
+"browser.empty.folder" = "空資料夾";
 "browser.loading" = "載入中...";
 
 /* ========================================
-   封存檔內容
+   File Browser (批次6 新增)
+   ======================================== */
+"filebrowser.loading" = "載入中...";
+"filebrowser.empty.title" = "空資料夾";
+"filebrowser.empty.message" = "此資料夾為空";
+"filebrowser.empty.browse" = "瀏覽...";
+
+/* ========================================
+   Archive Content
    ======================================== */
 "archive.items" = "%d 個項目";
 "archive.password.required" = "需要密碼";
-"archive.password.message" = "此封存檔可能已加密，請輸入密碼。";
+"archive.password.message" = "此壓縮檔可能已加密，請輸入密碼。";
 "archive.password.placeholder" = "密碼";
 "archive.password.cancel" = "取消";
-"archive.password.extract" = "擷取";
+"archive.password.extract" = "解壓縮";
 "archive.password.wrong" = "密碼錯誤";
 
-"archive.extract.selected" = "擷取";
+"archive.extract.selected" = "解壓縮";
 "archive.delete" = "刪除";
-"archive.extract.all" = "全部擷取";
+"archive.extract.all" = "全部解壓縮";
 
-"archive.extraction.complete" = "擷取完成：%@";
-"archive.extraction.failed" = "擷取失敗：%@";
-"archive.creation.success" = "封存檔建立成功";
+"archive.extraction.complete" = "解壓縮完成：%@";
+"archive.extraction.failed" = "解壓縮失敗：%@";
+"archive.extraction.timeout" = "解壓縮逾時";
+"archive.creation.success" = "壓縮檔建立成功";
 "archive.creation.failed" = "建立失敗：%@";
 
 /* ========================================
-   新建封存檔
+   Archive Delete (批次2 新增)
    ======================================== */
-"newarchive.title" = "新建封存檔";
+"archive.deleting" = "刪除中...";
+"archive.delete.success" = "成功刪除 %d 個檔案";
+"archive.delete.all.failed" = "全部刪除失敗";
+"archive.delete.partial" = "已刪除 %d 個檔案（共 %d 個）";
+"archive.delete.failed" = "刪除失敗";
+
+/* ========================================
+   File Operations (批次6 新增)
+   ======================================== */
+"file.delete.failed" = "檔案刪除失敗";
+"file.delete.success" = "檔案刪除成功";
+
+/* ========================================
+   New Archive
+   ======================================== */
+"newarchive.title" = "新建壓縮檔";
 "newarchive.add.files" = "加入檔案";
-"newarchive.add.folder" = "加入檔案夾";
+"newarchive.add.folder" = "加入資料夾";
 "newarchive.clear.all" = "全部清除";
 "newarchive.files.count" = "%d 個檔案";
-"newarchive.drop.here" = "在此處拖放檔案";
-"newarchive.drop.hint" = "或從 Finder 拖拽檔案到這裡";
+"newarchive.drop.here" = "拖放檔案到此處";
+"newarchive.drop.hint" = "或從 Finder 拖放檔案";
 
 "newarchive.name.label" = "名稱：";
-"newarchive.name.placeholder" = "封存檔名稱";
+"newarchive.name.placeholder" = "壓縮檔名稱";
 "newarchive.format.label" = "格式：";
 "newarchive.save.to.label" = "儲存到：";
 "newarchive.browse" = "瀏覽";
 "newarchive.not.selected" = "未選擇";
 
-"newarchive.encrypt" = "加密封存檔";
+"newarchive.encrypt" = "加密壓縮檔";
 "newarchive.password" = "密碼";
 "newarchive.confirm.password" = "確認密碼";
-"newarchive.password.mismatch" = "密碼不符";
+"newarchive.password.mismatch" = "密碼不相符";
 
 "newarchive.cancel" = "取消";
 "newarchive.create" = "建立";
 
-"newarchive.format.zip" = "通用格式，廣泛支援";
-"newarchive.format.tar" = "Unix/Linux 磁帶封存檔";
-"newarchive.format.gz" = "GNU Zip 壓縮的 TAR";
-"newarchive.format.7z" = "高壓縮比";
-"newarchive.format.rar" = "RAR 封存檔（需要 rar 工具）";
+"newarchive.format.zip" = "通用，廣泛支援";
+"newarchive.format.tar" = "Unix/Linux 磁帶壓縮檔";
+"newarchive.format.gz" = "GNU Zip 壓縮 TAR";
+"newarchive.format.7z" = "高壓縮率";
+"newarchive.format.rar" = "RAR 壓縮檔（需要 rar 工具）";
 
 /* ========================================
-   設定
+   Settings
    ======================================== */
 "settings.title" = "設定";
 "settings.tab.general" = "一般";
@@ -132,19 +156,19 @@
 "settings.tab.developer" = "開發者";
 "settings.close" = "關閉";
 
-/* --- 一般 --- */
+/* --- General --- */
 "settings.general.title" = "一般";
 "settings.general.language" = "語言";
 "settings.general.display.language" = "顯示語言";
-"settings.general.restart.hint" = "語言變更需要重新啟動應用程式";
+"settings.general.restart.hint" = "變更語言需要重新啟動應用程式";
 "settings.general.restart.title" = "語言已變更";
 "settings.general.restart.message" = "重新啟動以套用變更。";
 "settings.general.restart.now" = "立即重新啟動";
 "settings.general.restart.later" = "稍後";
 
-/* --- 工具 --- */
+/* --- Tools --- */
 "settings.tools.title" = "工具";
-"settings.tools.subtitle" = "安裝和管理封存工具（7zz 和 RAR）。";
+"settings.tools.subtitle" = "安裝和管理壓縮檔工具（7zz 和 RAR）。";
 "settings.tools.status" = "狀態：";
 "settings.tools.installed" = "所有工具已安裝";
 "settings.tools.missing" = "缺少 %d 個工具";
@@ -152,33 +176,34 @@
 "settings.tools.installing" = "安裝中...";
 "settings.tools.delete" = "刪除工具";
 "settings.tools.checking" = "檢查中...";
-"settings.tools.description" = "7zz：通用解壓縮工具（支援 ZIP、RAR、7Z、TAR 等）\nRAR：RAR 壓縮和擷取";
+"settings.tools.description" = "7zz：通用解壓縮工具（支援 ZIP、RAR、7Z、TAR 等）\nRAR：RAR 壓縮和解壓縮";
+"settings.tools.downloading" = "下載中...";
 
 "settings.tools.install.alert.title" = "缺少工具";
-"settings.tools.install.alert.message" = "此應用程式需要額外的工具進行封存操作：\n\n• 7zz：通用解壓縮工具（支援 ZIP、RAR、7Z、TAR 等）\n• rar：僅 RAR 壓縮\n\n點擊安裝以下載並設定這些工具。";
+"settings.tools.install.alert.message" = "此應用程式需要額外工具進行壓縮檔操作：\n\n• 7zz：通用解壓縮工具（支援 ZIP、RAR、7Z、TAR 等）\n• rar：RAR 壓縮（僅壓縮）\n\n點擊「全部安裝」以下載並設定這些工具。";
 "settings.tools.install.alert.install" = "全部安裝";
 "settings.tools.install.alert.cancel" = "取消";
 
 "settings.tools.delete.confirm.title" = "刪除工具";
-"settings.tools.delete.confirm.message" = "這將從應用程式的支援目錄中刪除 7zz 和 rar 工具。";
+"settings.tools.delete.confirm.message" = "這將從應用程式支援目錄中刪除 7zz 和 rar 工具。";
 "settings.tools.delete.confirm.delete" = "刪除";
 "settings.tools.delete.confirm.cancel" = "取消";
 
 "settings.tools.complete" = "完成";
 "settings.tools.failed" = "失敗";
 "settings.tools.deleted" = "已刪除";
-"settings.tools.deleted.message" = "工具已刪除，需要重新啟動應用程式。";
+"settings.tools.deleted.message" = "工具已刪除。需要重新啟動應用程式。";
 "settings.tools.delete.failed" = "無法刪除。";
 
-/* --- 更新 --- */
+/* --- Updates --- */
 "settings.updates.title" = "更新";
 "settings.updates.subtitle" = "檢查新版本並管理更新設定。";
 "settings.updates.current.version" = "目前版本";
 "settings.updates.channel" = "更新頻道";
-"settings.updates.channel.stable" = "穩定版（建議）";
+"settings.updates.channel.stable" = "穩定版（推薦）";
 "settings.updates.channel.beta" = "測試版 / RC";
 "settings.updates.channel.stable.desc" = "僅穩定版本";
-"settings.updates.channel.beta.desc" = "包含測試版和候選版本";
+"settings.updates.channel.beta.desc" = "包含測試版和候選發布版";
 "settings.updates.auto.check" = "自動檢查";
 "settings.updates.auto.check.desc" = "自動檢查更新";
 "settings.updates.check.button" = "檢查更新";
@@ -188,7 +213,7 @@
 "settings.updates.view" = "檢視";
 "settings.updates.downloading" = "下載中... %d%%";
 "settings.updates.cancel" = "取消";
-"settings.updates.restarting" = "%d 秒後重新啟動...";
+"settings.updates.restarting" = "%ds 後重新啟動...";
 "settings.updates.footer" = "更新從 GitHub Releases 下載";
 
 "settings.updates.no.update.title" = "沒有可用更新";
@@ -200,48 +225,48 @@
 
 "settings.updates.download.failed" = "更新失敗";
 
-/* --- 關於 --- */
+/* --- About --- */
 "settings.about.title" = "關於";
 "settings.about.version" = "版本 %@";
 "settings.about.developer.mode" = "開發者模式已啟用";
-"settings.about.license" = "MIT 授權條款 • 開源";
+"settings.about.license" = "MIT 授權 • 開源";
 
 /* ========================================
-   輔助說明
+   Help
    ======================================== */
-"help.title" = "輔助說明";
+"help.title" = "說明";
 "help.search.placeholder" = "搜尋";
-"help.search.empty" = "找不到 \"%@\" 的相關結果";
+"help.search.empty" = "找不到「%@」的結果";
 "help.close" = "關閉";
 
-"help.item.open.archive" = "📦 開啟封存檔";
-"help.item.open.archive.desc1" = "點擊「開啟封存檔」或按 ⌘O 開啟";
+"help.item.open.archive" = "📦 開啟壓縮檔";
+"help.item.open.archive.desc1" = "點擊「開啟壓縮檔」或按 ⌘O 開啟";
 "help.item.open.archive.desc2" = "支援：ZIP、TAR、GZ、7Z、RAR";
 
-"help.item.new.archive" = "🆕 新建封存檔";
-"help.item.new.archive.desc1" = "點擊「新建封存檔」或按 ⌘A 建立";
+"help.item.new.archive" = "🆕 新建壓縮檔";
+"help.item.new.archive.desc1" = "點擊「新建壓縮檔」或按 ⌘A 建立";
 "help.item.new.archive.desc2" = "加入檔案、選擇格式、選擇目標位置";
 
-"help.item.extract" = "📤 擷取";
-"help.item.extract.desc1" = "選擇檔案，點擊「擷取」";
+"help.item.extract" = "📤 解壓縮";
+"help.item.extract.desc1" = "選擇檔案，點擊「解壓縮」";
 "help.item.extract.desc2" = "支援所有格式";
 
 "help.item.modify" = "✏️ 修改";
-"help.item.modify.desc1" = "拖拽檔案加入";
-"help.item.modify.desc2" = "右鍵點擊刪除";
+"help.item.modify.desc1" = "拖放檔案以加入";
+"help.item.modify.desc2" = "右鍵點擊以刪除";
 
 "help.item.settings" = "⚙️ 設定";
 "help.item.settings.desc1" = "變更語言、安裝工具";
 "help.item.settings.desc2" = "按 ⌘, 開啟設定";
 
-"help.item.shortcuts" = "⌨️ 快速鍵";
-"help.item.shortcuts.desc1" = "⌘A - 新建封存檔";
-"help.item.shortcuts.desc2" = "⌘O - 開啟封存檔";
+"help.item.shortcuts" = "⌨️ 快捷鍵";
+"help.item.shortcuts.desc1" = "⌘A - 新建壓縮檔";
+"help.item.shortcuts.desc2" = "⌘O - 開啟壓縮檔";
 "help.item.shortcuts.desc3" = "⌘, - 設定";
-"help.item.shortcuts.desc4" = "⌘? - 輔助說明";
+"help.item.shortcuts.desc4" = "⌘? - 說明";
 
 /* ========================================
-   開發者模式
+   Developer Mode
    ======================================== */
 "developer.title" = "開發者";
 "developer.subtitle" = "面向開發者和進階使用者的工具";
@@ -252,19 +277,19 @@
 "developer.category.advanced" = "進階";
 
 "developer.category.debug.desc" = "除錯工具和診斷";
-"developer.category.experimental.desc" = "實驗性功能（可能變更或移除）";
+"developer.category.experimental.desc" = "實驗性功能（可能會變更或移除）";
 "developer.category.unstable.desc" = "不穩定功能（可能導致當機或資料遺失）";
 "developer.category.advanced.desc" = "進階使用者設定";
 
-/* --- 除錯 --- */
+/* --- Debug --- */
 "developer.debug.logging" = "日誌";
 "developer.debug.logging.enable" = "啟用除錯日誌";
-"developer.debug.logging.desc" = "記錄所有操作到主控台和開發者面板";
+"developer.debug.logging.desc" = "將所有操作記錄到主控台和開發者面板";
 "developer.debug.show.hidden" = "顯示隱藏檔案";
-"developer.debug.show.hidden.desc" = "顯示 .DS_Store、.localized 及其他隱藏檔案";
+"developer.debug.show.hidden.desc" = "顯示 .DS_Store、.localized 等隱藏檔案";
 "developer.debug.export.logs" = "匯出除錯日誌";
 "developer.debug.clear.logs" = "清除日誌";
-"developer.debug.view.console" = "在主控台檢視日誌";
+"developer.debug.view.console" = "在主控台中檢視日誌";
 
 "developer.debug.tool.paths" = "工具路徑";
 "developer.debug.custom.paths" = "使用自訂工具路徑";
@@ -274,39 +299,40 @@
 "developer.debug.path.restart.hint" = "⚠️ 變更將在應用程式重新啟動後生效";
 
 "developer.debug.test.operations" = "測試操作";
-"developer.debug.test.load" = "模擬載入封存檔";
-"developer.debug.test.error" = "模擬擷取錯誤";
+"developer.debug.test.load" = "模擬壓縮檔載入";
+"developer.debug.test.error" = "模擬解壓縮錯誤";
 "developer.debug.test.tools" = "測試工具路徑";
+"developer.debug.test.switches" = "顯示開關狀態";
 
-/* --- 實驗性 --- */
+/* --- Experimental --- */
 "developer.experimental.title" = "實驗性功能";
-"developer.experimental.parallel" = "並行擷取";
-"developer.experimental.parallel.desc" = "同時擷取多個檔案以提高效能";
-"developer.experimental.new.engine" = "新擷取引擎";
-"developer.experimental.new.engine.desc" = "使用效能更好的新擷取引擎";
+"developer.experimental.parallel" = "並行解壓縮";
+"developer.experimental.parallel.desc" = "同時解壓縮多個檔案以提高效能";
+"developer.experimental.new.engine" = "新解壓縮引擎";
+"developer.experimental.new.engine.desc" = "使用效能更好的新解壓縮引擎";
 "developer.experimental.fast.zip" = "快速 ZIP 處理";
-"developer.experimental.fast.zip.desc" = "跳過 CRC 檢查以加快 ZIP 擷取（可靠性較低）";
-"developer.experimental.warning" = "⚠️ 這些功能是實驗性的，可能變更或移除";
+"developer.experimental.fast.zip.desc" = "跳過 CRC 檢查以加快 ZIP 解壓縮（可靠性較低）";
+"developer.experimental.warning" = "⚠️ 這些功能為實驗性質，可能會變更或移除";
 
-/* --- 不穩定 --- */
+/* --- Unstable --- */
 "developer.unstable.title" = "不穩定功能";
 "developer.unstable.async" = "非同步檔案寫入";
-"developer.unstable.async.desc" = "非同步寫入檔案（應用程式當機時可能導致資料遺失）";
-"developer.unstable.memory" = "記憶體擷取";
-"developer.unstable.memory.desc" = "直接擷取到記憶體（高記憶體佔用，大檔案可能當機）";
+"developer.unstable.async.desc" = "非同步寫入檔案（如果應用程式當機可能導致資料遺失）";
+"developer.unstable.memory" = "記憶體解壓縮";
+"developer.unstable.memory.desc" = "直接解壓縮到記憶體（高記憶體佔用，大檔案可能當機）";
 "developer.unstable.skip.permissions" = "跳過權限檢查";
 "developer.unstable.skip.permissions.desc" = "繞過檔案權限檢查（安全風險）";
 "developer.unstable.warning" = "⚠️⚠️ 警告：這些功能不穩定，可能導致當機或資料遺失 ⚠️⚠️";
 
-/* --- 進階 --- */
+/* --- Advanced --- */
 "developer.advanced.title" = "效能設定";
 "developer.advanced.memory.limit" = "記憶體限制（MB）：";
 "developer.advanced.memory.apply" = "套用";
-"developer.advanced.memory.desc" = "擷取時的最大記憶體使用量";
+"developer.advanced.memory.desc" = "解壓縮過程中的最大記憶體使用量";
 "developer.advanced.temp.dir" = "暫存目錄：";
 "developer.advanced.temp.browse" = "瀏覽";
 "developer.advanced.temp.apply" = "套用";
-"developer.advanced.temp.desc" = "自訂擷取暫存目錄（需要重新啟動）";
+"developer.advanced.temp.desc" = "自訂解壓縮暫存目錄（需要重新啟動）";
 "developer.advanced.max.concurrent" = "最大並行操作數：";
 "developer.advanced.max.concurrent.desc" = "最大並行操作數量";
 
@@ -316,7 +342,7 @@
 "developer.advanced.open.support" = "開啟應用程式支援目錄";
 
 /* ========================================
-   更新（系統）
+   Updates (System)
    ======================================== */
 "update.checking" = "正在檢查更新...";
 "update.available" = "有可用更新！";
@@ -324,22 +350,22 @@
 "update.downloading" = "下載中...";
 "update.extracting" = "解壓縮中...";
 "update.installing" = "安裝中...";
-"update.restart" = "%d 秒後重新啟動...";
+"update.restart" = "%ds 後重新啟動...";
 "update.complete" = "更新完成";
 
 /* ========================================
-   工具安裝
+   Tools Installer
    ======================================== */
 "tools.installing" = "正在安裝 %@...";
 "tools.install.complete" = "安裝完成";
 
 /* ========================================
-   錯誤 & 提醒
+   Errors & Alerts
    ======================================== */
-"error.unsupported.format" = "不支援的封存格式";
-"error.tool.not.found" = "找不到所需工具：%@";
+"error.unsupported.format" = "不支援的壓縮檔格式";
+"error.tool.not.found" = "未找到所需工具：%@";
 "error.command.failed" = "命令執行失敗：%@";
-"error.password.required" = "此封存檔需要密碼";
+"error.password.required" = "此壓縮檔需要密碼";
 "error.unknown" = "發生未知錯誤";
 
 "alert.ok" = "確定";

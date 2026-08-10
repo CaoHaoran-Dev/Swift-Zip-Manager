@@ -36,14 +36,16 @@ struct FileBrowserView: View {
             
             contentView
         }
-        .onAppear {
-            if currentDirectory == nil {
-                currentDirectory = FileManager.default.homeDirectoryForCurrentUser
-            }
-            loadContents()
-        }
-        .onChange(of: currentDirectory) { _ in
-            loadContents()
+        .task(id: currentDirectory) {
+            guard let dir = currentDirectory else { return }
+            isLoading = true
+            defer { isLoading = false }
+            
+            let loadedItems = await Task {
+                return loadDirectoryContents(dir)
+            }.value
+            
+            items = loadedItems
         }
         .onDrop(of: [.fileURL], isTargeted: $isDragTarget) { providers in
             handleDrop(providers: providers)
@@ -53,27 +55,34 @@ struct FileBrowserView: View {
     @ViewBuilder
     private var contentView: some View {
         if isLoading {
-            ProgressView()
+            // ✅ 使用 LoadingView
+            LoadingView("filebrowser.loading".localized)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if manager.currentArchive != nil {
             ArchiveContentView(manager: manager)
+        } else if items.isEmpty {
+            // ✅ 使用 EmptyStateView
+            EmptyStateView(
+                icon: "folder",
+                title: "filebrowser.empty.title".localized,
+                message: currentDirectory?.path ?? "filebrowser.empty.message".localized,
+                action: {
+                    let panel = NSOpenPanel()
+                    panel.canChooseDirectories = true
+                    panel.canCreateDirectories = false
+                    panel.begin { response in
+                        if response == .OK, let url = panel.url {
+                            currentDirectory = url
+                        }
+                    }
+                },
+                actionTitle: "filebrowser.empty.browse".localized
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if viewMode == .list {
             FileListView(items: items, onItemTap: handleItemTap)
         } else {
             FileGridView(items: items, onItemTap: handleItemTap)
-        }
-    }
-    
-    func loadContents() {
-        guard let dir = currentDirectory else { return }
-        isLoading = true
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            let loadedItems = loadDirectoryContents(dir)
-            DispatchQueue.main.async {
-                items = loadedItems
-                isLoading = false
-            }
         }
     }
     
@@ -118,7 +127,6 @@ struct FileBrowserView: View {
     func goUp() {
         if let dir = currentDirectory?.deletingLastPathComponent() {
             currentDirectory = dir
-            loadContents()
         }
     }
     
@@ -136,7 +144,6 @@ struct FileBrowserView: View {
     func handleItemTap(_ item: FileItem) {
         if item.isDirectory {
             currentDirectory = item.url
-            loadContents()
         } else if item.isArchive {
             manager.loadArchive(item.url, recentManager: recentManager)
         }
@@ -153,7 +160,6 @@ struct FileBrowserView: View {
                             manager.loadArchive(url, recentManager: recentManager)
                         } else {
                             currentDirectory = url.deletingLastPathComponent()
-                            loadContents()
                         }
                     }
                 }

@@ -1,5 +1,5 @@
 //
-//  UpdateChecker.swift.swift
+//  UpdateChecker.swift
 //  Swift Zip Manager
 //
 //  Created by Haoran on 2026/8/9.
@@ -14,13 +14,11 @@ class UpdateChecker: ObservableObject {
     @Published var downloadStatus = ""
     @Published var isDownloading = false
     @Published var updateAvailable: UpdateInfo?
-    @Published var showUpdateAlert = false
-    @Published var countdownSeconds = 5
     
     private let apiClient = GitHubAPIClient()
     private let downloader = UpdateDownloader()
+    private let installer = UpdateInstaller()
     private let versionComparator = VersionComparator.self
-    private var countdownTimer: Timer?
     private var updateCompletion: ((Bool, String?) -> Void)?
     
     struct UpdateInfo {
@@ -41,6 +39,8 @@ class UpdateChecker: ObservableObject {
         let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         return "v\(shortVersion) (Build \(currentBuildNumber))"
     }
+    
+    // MARK: - 检查更新
     
     func checkForUpdates(includePrerelease: Bool, showIfNone: Bool = false, completion: ((Bool, String?) -> Void)? = nil) {
         isChecking = true
@@ -71,7 +71,11 @@ class UpdateChecker: ObservableObject {
         
         guard let asset = release.assets.first(where: { $0.name == AppConstants.targetFileName }) else {
             if showIfNone {
-                showAlert(title: "Error", message: "Could not find download file")
+                let alert = NSAlert()
+                alert.messageText = "settings.updates.error".localized
+                alert.informativeText = "settings.updates.file.not.found".localized
+                alert.addButton(withTitle: "alert.ok".localized)
+                alert.runModal()
             }
             updateCompletion?(false, "ZIP file not found in release")
             updateCompletion = nil
@@ -111,81 +115,87 @@ class UpdateChecker: ObservableObject {
         updateCompletion = nil
     }
     
-    func downloadAndInstall(progress: @escaping (Double, String) -> Void, completion: @escaping (Bool, String) -> Void) {
+    // MARK: - 下载并安装
+    
+    func downloadAndInstall(
+        progress: @escaping (Double, String) -> Void,
+        completion: @escaping (Bool, String) -> Void
+    ) {
         guard let update = updateAvailable else {
             completion(false, "No update available")
             return
         }
         
         isDownloading = true
+        downloadProgress = 0
+        downloadStatus = "Starting..."
         
-        downloader.downloadAndInstall(
+        // 1. 下载
+        downloader.download(
             from: update.downloadURL,
-            progress: progress
-        ) { [weak self] success, message in
-            DispatchQueue.main.async {
-                self?.isDownloading = false
-                if success {
-                    self?.startCountdownAndExit()
+            progress: { [weak self] p, status in
+                DispatchQueue.main.async {
+                    self?.downloadProgress = p
+                    self?.downloadStatus = status
+                    progress(p, status)
                 }
-                completion(success, message)
+            },
+            completion: { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let zipURL):
+                    // 2. 下载完成 → 安装
+                    self.downloadStatus = "Installing..."
+                    progress(1.0, "Installing...")
+                    
+                    self.installer.install(
+                        from: zipURL,
+                        progress: { p, status in
+                            DispatchQueue.main.async {
+                                self.downloadProgress = p
+                                self.downloadStatus = status
+                                progress(p, status)
+                            }
+                        },
+                        completion: { success, message in
+                            DispatchQueue.main.async {
+                                self.isDownloading = false
+                                // 如果成功，当前进程可能已退出，completion 可能不会执行
+                                // 保留作为 fallback
+                                completion(success, message)
+                            }
+                        }
+                    )
+                    
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        self.isDownloading = false
+                        self.downloadStatus = "Download failed"
+                        completion(false, error.localizedDescription)
+                    }
+                }
             }
-        }
+        )
     }
     
+    /// 取消下载/安装
     func cancelDownload() {
         downloader.cancelDownload()
+        installer.cancelInstallation()
         isDownloading = false
         downloadProgress = 0
         downloadStatus = ""
-        countdownTimer?.invalidate()
-        countdownTimer = nil
     }
     
-    private func startCountdownAndExit() {
-        countdownSeconds = 5
-        downloadStatus = "Restarting in \(countdownSeconds)s..."
-        showUpdateAlert = true
-        
-        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
-            guard let self = self else {
-                timer.invalidate()
-                return
-            }
-            
-            self.countdownSeconds -= 1
-            self.downloadStatus = "Restarting in \(self.countdownSeconds)s..."
-            
-            if self.countdownSeconds <= 3 {
-                self.showUpdateAlert = true
-            }
-            
-            if self.countdownSeconds <= 0 {
-                timer.invalidate()
-                self.showUpdateAlert = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.isDownloading = false
-                    NSApplication.shared.terminate(nil)
-                }
-            }
-        }
-    }
+    // MARK: - UI 提示
     
     private func showNoUpdateAlert() {
         let alert = NSAlert()
-        alert.messageText = "No Update Available"
-        alert.informativeText = "You're running the latest version (Build \(currentBuildNumber))."
+        alert.messageText = "settings.updates.no.update.title".localized
+        alert.informativeText = "settings.updates.no.update.message".localized
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
-    }
-    
-    private func showAlert(title: String, message: String) {
-        let alert = NSAlert()
-        alert.messageText = title
-        alert.informativeText = message
-        alert.alertStyle = .critical
-        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "alert.ok".localized)
         alert.runModal()
     }
 }

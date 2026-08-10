@@ -44,7 +44,7 @@ struct SidebarRow: View {
 
 struct SidebarView: View {
     @EnvironmentObject var appState: AppState
-    @EnvironmentObject var languageManager: LanguageManager  // ✅ 添加
+    @EnvironmentObject var languageManager: LanguageManager
     @ObservedObject var manager: ArchiveManager
     @ObservedObject var recentManager: RecentFilesManager
     @Binding var currentDirectory: URL?
@@ -115,8 +115,9 @@ struct SidebarView: View {
                 Section("sidebar.recent".localized) {
                     ForEach(recentManager.recentFiles.prefix(10), id: \.self) { file in
                         Button(action: {
-                            manager.loadArchive(file.url, recentManager: recentManager)
+                            // ✅ #13: 打开归档时清空侧边栏选中状态
                             selectedSidebarItem = nil
+                            manager.loadArchive(file.url, recentManager: recentManager)
                         }) {
                             HStack(spacing: 8) {
                                 Image(systemName: "doc.zipper")
@@ -152,7 +153,6 @@ struct SidebarView: View {
                 .id(recentManager.recentFiles.count)
             }
             
-            // ✅ 设置按钮 - 使用 appState.showSettings = true
             Section {
                 SidebarRow(icon: "gear", title: "sidebar.settings".localized, isSelected: false, color: .gray) {
                     print("🔧 Settings button tapped in SidebarView")
@@ -162,6 +162,12 @@ struct SidebarView: View {
         }
         .listStyle(SidebarListStyle())
         .frame(minWidth: 220, maxWidth: 280)
+        // ✅ #13: 监听归档加载完成，清空选中状态
+        .onReceive(manager.$currentArchive) { archive in
+            if archive != nil {
+                selectedSidebarItem = nil
+            }
+        }
     }
     
     func getVolumes() -> [(url: URL, name: String)] {
@@ -191,8 +197,9 @@ struct SidebarView: View {
         
         panel.begin { response in
             if response == .OK, let url = panel.url {
-                manager.loadArchive(url, recentManager: recentManager)
+                // ✅ #13: 打开归档时清空侧边栏选中状态
                 selectedSidebarItem = nil
+                manager.loadArchive(url, recentManager: recentManager)
             }
         }
     }

@@ -11,10 +11,35 @@ class ArchiveCreator {
     private let toolResolver = ToolPathResolver()
     private let fileManager = FileManager.default
     
+    // ✅ #21: 获取 AppState 的引用
+    weak var appState: AppState?
+    
+    private let formatExtensions: [String: String] = [
+        "zip": "zip",
+        "tar": "tar",
+        "gz": "tar.gz",
+        "7z": "7z",
+        "rar": "rar"
+    ]
+    
     func create(files: [URL], format: String, name: String, destination: URL, password: String?, completion: @escaping (Result<Void, ArchiveError>) -> Void) {
-        let ext = ["zip": "zip", "tar": "tar", "gz": "tar.gz", "7z": "7z", "rar": "rar"][format] ?? "zip"
+        guard let ext = formatExtensions[format] else {
+            completion(.failure(.unsupportedFormat))
+            return
+        }
+        
         let fileName = name.hasSuffix(".\(ext)") ? name : "\(name).\(ext)"
         let targetPath = destination.appendingPathComponent(fileName)
+        
+        if let pwd = password, !pwd.isEmpty {
+            if format == "7z" || format == "rar" {
+                let toolName = format == "7z" ? "7zz" : "rar"
+                guard toolResolver.resolve(toolName) != nil else {
+                    completion(.failure(.toolNotFound(toolName)))
+                    return
+                }
+            }
+        }
         
         DispatchQueue.global(qos: .userInitiated).async {
             do {
@@ -40,19 +65,38 @@ class ArchiveCreator {
         
         defer { try? fileManager.removeItem(at: tempDir) }
         
-        // 复制文件到临时目录
         for file in files {
             let destURL = tempDir.appendingPathComponent(file.lastPathComponent)
             try fileManager.copyItem(at: file, to: destURL)
         }
         
+        // ✅ #21: 检查实验性功能
+        let useFastZip = appState?.experimentalFastZip ?? false
+        let useAsyncWrite = appState?.unstableAsyncWrite ?? false
+        
+        if useAsyncWrite {
+            print("⚠️ [Unstable] Async write enabled - may cause data loss if interrupted")
+        }
+        
         let process = Process()
         var args: [String] = []
+        var environment = ProcessInfo.processInfo.environment
+        if let pwd = password, !pwd.isEmpty {
+            environment["ARCHIVE_PASSWORD"] = pwd
+        }
+        process.environment = environment
         
         switch format {
         case "zip":
             process.executableURL = URL(fileURLWithPath: "/usr/bin/zip")
             args = ["-r"]
+            
+            // ✅ #21: 实验性：快速 ZIP（仅存储，不压缩）
+            if useFastZip {
+                args.append("-0")  // 仅存储
+                print("🚀 [Experimental] Fast ZIP enabled (store only, no compression)")
+            }
+            
             if let pwd = password, !pwd.isEmpty {
                 args.append("-P")
                 args.append(pwd)
@@ -76,6 +120,13 @@ class ArchiveCreator {
             }
             process.executableURL = URL(fileURLWithPath: toolPath)
             args = ["a", targetPath.path, "."]
+            
+            // ✅ #21: 实验性：快速 7z（更低的压缩级别）
+            if useFastZip {
+                args.append("-mx=1")  // 最低压缩
+                print("🚀 [Experimental] Fast 7Z enabled (lowest compression)")
+            }
+            
             if let pwd = password, !pwd.isEmpty {
                 args.append("-p\(pwd)")
                 args.append("-mhe=on")
@@ -88,6 +139,13 @@ class ArchiveCreator {
             }
             process.executableURL = URL(fileURLWithPath: toolPath)
             args = ["a", "-r"]
+            
+            // ✅ #21: 实验性：快速 RAR（不压缩）
+            if useFastZip {
+                args.append("-m0")  // 不压缩
+                print("🚀 [Experimental] Fast RAR enabled (no compression)")
+            }
+            
             if let pwd = password, !pwd.isEmpty {
                 args.append("-hp\(pwd)")
             }
@@ -100,8 +158,16 @@ class ArchiveCreator {
         }
         
         process.arguments = args
-        try process.run()
-        process.waitUntilExit()
+        
+        // ✅ #21: 实验性：异步写入（不等待进程完成）
+        if useAsyncWrite {
+            print("⚠️ [Unstable] Async write enabled - running in background")
+            try process.run()
+            // 不等待，立即返回
+            return
+        }
+        
+        try process.runWithTimeout(seconds: 600)
         
         if process.terminationStatus != 0 {
             throw ArchiveError.commandFailed("Process exited with code \(process.terminationStatus)")

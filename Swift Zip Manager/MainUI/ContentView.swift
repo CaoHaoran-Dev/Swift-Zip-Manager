@@ -25,8 +25,8 @@ struct ContentView: View {
                 recentManager: recentManager,
                 currentDirectory: $currentDirectory
             )
-            .environmentObject(appState)        // ✅ 确保传递
-            .environmentObject(languageManager)  // ✅ 确保传递
+            .environmentObject(appState)
+            .environmentObject(languageManager)
         } detail: {
             FileBrowserView(
                 manager: manager,
@@ -54,7 +54,10 @@ struct ContentView: View {
                 WindowManager.shared.openHelp(appState: appState)
             }
         }
+        // ✅ #21: 绑定 AppState 到 Manager
         .onAppear {
+            manager.appState = appState
+            
             recentManager.refresh()
             
             let missing = toolInstaller.checkTools()

@@ -82,7 +82,21 @@ struct DeveloperSettingsView: View {
         }
         .onDisappear {
             appState.saveDeveloperSettings()
+            // ✅ #23: 发送通知，通知其他组件设置已变更
             NotificationCenter.default.post(name: .developerSettingsChanged, object: nil)
+            
+            // ✅ #23: 记录变更日志
+            appState.addDevLog("Developer settings saved", type: .info)
+        }
+        // ✅ #23: 监听重置通知
+        .onReceive(NotificationCenter.default.publisher(for: .developerSettingsReset)) { _ in
+            appState.addDevLog("Developer settings reset to defaults", type: .warning)
+            // 刷新 UI
+            selectedCategory = .debug
+        }
+        // ✅ #23: 监听设置变更通知
+        .onReceive(NotificationCenter.default.publisher(for: .developerSettingsChanged)) { _ in
+            appState.addDevLog("Developer settings changed externally", type: .info)
         }
     }
 }
