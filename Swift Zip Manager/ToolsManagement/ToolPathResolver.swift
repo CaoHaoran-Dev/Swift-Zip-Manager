@@ -10,10 +10,11 @@ import Foundation
 class ToolPathResolver {
     private let fileManager = FileManager.default
     
-    // ✅ #18: 缓存机制
+    /// 缓存机制
     private var cache: [String: String] = [:]
     private var cacheTimestamp: Date?
-    private let cacheExpiry: TimeInterval = 5.0 // 5秒缓存过期
+    /// 缓存过期时间：60 秒
+    private let cacheExpiry: TimeInterval = 60.0
     
     /// 应用支持目录下的工具路径
     private var appSupportToolsPath: String {
@@ -23,22 +24,30 @@ class ToolPathResolver {
         return path
     }
     
-    /// ✅ #19: 系统 PATH 搜索路径
+    /// 系统 PATH 搜索路径
     private var systemPaths: [String] {
         let pathEnv = ProcessInfo.processInfo.environment["PATH"] ?? ""
         return pathEnv.split(separator: ":").map { String($0) }
     }
     
-    /// ✅ #18: 清除缓存
+    /// 清除缓存
     func invalidateCache() {
         cache.removeAll()
         cacheTimestamp = nil
         print("🔄 Tool cache invalidated")
     }
     
-    /// 获取工具的完整路径（检测 App Support + 系统 PATH）
-    func resolve(_ command: String) -> String? {
-        // ✅ #18: 检查缓存
+    /// 获取工具的完整路径
+    func resolve(_ command: String, customPath: String? = nil) -> String? {
+        // 1. 自定义路径
+        if let custom = customPath, !custom.isEmpty {
+            if fileManager.fileExists(atPath: custom) && fileManager.isExecutableFile(atPath: custom) {
+                print("✅ Found \(command) at custom path: \(custom)")
+                return custom
+            }
+        }
+        
+        // 2. 检查缓存
         if let cached = cache[command],
            let timestamp = cacheTimestamp,
            Date().timeIntervalSince(timestamp) < cacheExpiry {
@@ -47,56 +56,55 @@ class ToolPathResolver {
             }
         }
         
-        // 1. 检测 App Support
+        // 3. 检测 App Support
         let appSupportPath = "\(appSupportToolsPath)/\(command)"
         if fileManager.fileExists(atPath: appSupportPath) {
             if fileManager.isExecutableFile(atPath: appSupportPath) {
                 print("✅ Found \(command) in App Support: \(appSupportPath)")
-                cache[command] = appSupportPath
-                cacheTimestamp = Date()
+                updateCache(command: command, path: appSupportPath)
                 return appSupportPath
             } else {
                 try? fileManager.setAttributes([.posixPermissions: 0o755], ofItemAtPath: appSupportPath)
                 if fileManager.isExecutableFile(atPath: appSupportPath) {
                     print("✅ Fixed permissions for \(command) in App Support")
-                    cache[command] = appSupportPath
-                    cacheTimestamp = Date()
+                    updateCache(command: command, path: appSupportPath)
                     return appSupportPath
                 }
             }
         }
         
-        // ✅ #19: 2. 检测系统 PATH
+        // 4. 检测系统 PATH
         for systemPath in systemPaths {
             let fullPath = "\(systemPath)/\(command)"
             if fileManager.fileExists(atPath: fullPath) && fileManager.isExecutableFile(atPath: fullPath) {
                 print("✅ Found \(command) in system PATH: \(fullPath)")
-                cache[command] = fullPath
-                cacheTimestamp = Date()
+                updateCache(command: command, path: fullPath)
                 return fullPath
             }
         }
         
-        print("❌ \(command) not found in App Support or system PATH")
+        print("❌ \(command) not found")
         return nil
     }
     
-    /// 检查工具是否已安装
-    func isInstalled(_ command: String) -> Bool {
-        return resolve(command) != nil
+    private func updateCache(command: String, path: String) {
+        cache[command] = path
+        cacheTimestamp = Date()
     }
     
-    /// 获取缺失的工具
-    func getMissingTools() -> [String] {
+    func isInstalled(_ command: String, customPath: String? = nil) -> Bool {
+        return resolve(command, customPath: customPath) != nil
+    }
+    
+    func getMissingTools(customPaths: [String: String] = [:]) -> [String] {
         var missing: [String] = []
-        if !isInstalled("7zz") { missing.append("7zz") }
-        if !isInstalled("rar") { missing.append("rar") }
+        if !isInstalled("7zz", customPath: customPaths["7zz"]) { missing.append("7zz") }
+        if !isInstalled("rar", customPath: customPaths["rar"]) { missing.append("rar") }
         return missing
     }
     
-    /// 检查所有工具是否就绪
-    func checkToolsReady() -> (allReady: Bool, missing: [String]) {
-        let missing = getMissingTools()
+    func checkToolsReady(customPaths: [String: String] = [:]) -> (allReady: Bool, missing: [String]) {
+        let missing = getMissingTools(customPaths: customPaths)
         return (missing.isEmpty, missing)
     }
 }

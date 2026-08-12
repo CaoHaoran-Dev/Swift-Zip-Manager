@@ -60,17 +60,27 @@ class ArchiveExtractor {
         try performStandardExtract(source: source, target: target, format: format, password: password)
     }
     
+    // MARK: - 标准提取（先无密码，失败后检测是否需要密码）
+    
     private func performStandardExtract(source: URL, target: URL, format: String, password: String?) throws {
         let process = Process()
-        // ✅ #1: var → let (不可变)
-        var args: [String]
+        var environment = ProcessInfo.processInfo.environment
+        
+        // 如果有密码，设置环境变量
+        if let pwd = password, !pwd.isEmpty {
+            environment["EXTRACT_PASSWORD"] = pwd
+        }
+        process.environment = environment
+        
+        var args: [String] = []
         
         switch format {
         case "zip":
             process.executableURL = URL(fileURLWithPath: "/usr/bin/unzip")
+            // 先尝试无密码解压
             args = ["-o", source.path, "-d", target.path]
             if let pwd = password, !pwd.isEmpty {
-                args = ["-o", source.path, "-d", target.path, "-P", pwd]  // ⚠️ 这里需要重新赋值，所以不能用 let
+                args = ["-o", "-P", pwd, source.path, "-d", target.path]
             }
             
         case "7z":
@@ -80,7 +90,9 @@ class ArchiveExtractor {
             process.executableURL = URL(fileURLWithPath: toolPath)
             args = ["x", source.path, "-o\(target.path)", "-y"]
             if let pwd = password, !pwd.isEmpty {
-                args = ["x", source.path, "-o\(target.path)", "-y", "-p\(pwd)"]
+                environment["7Z_PASSWORD"] = pwd
+                process.environment = environment
+                args.append("-p")
             }
             
         case "rar":
@@ -89,7 +101,9 @@ class ArchiveExtractor {
             }
             process.executableURL = URL(fileURLWithPath: toolPath)
             if let pwd = password, !pwd.isEmpty {
-                args = ["x", "-p\(pwd)", source.path, target.path]
+                environment["RAR_PASSWORD"] = pwd
+                process.environment = environment
+                args = ["x", source.path, target.path]
             } else {
                 args = ["x", source.path, target.path]
             }
@@ -103,24 +117,39 @@ class ArchiveExtractor {
         }
         
         process.arguments = args
+        
         let errorPipe = Pipe()
         process.standardError = errorPipe
         
-        try process.runWithTimeout(seconds: 600)
+        try process.run()
+        process.waitUntilExit()
         
         if process.terminationStatus != 0 {
             let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
             let errorMsg = String(data: errorData, encoding: .utf8) ?? "Unknown error"
             
             let lowercasedError = errorMsg.lowercased()
-            if lowercasedError.contains("password") || lowercasedError.contains("wrong") || lowercasedError.contains("bad") {
-                throw ArchiveError.wrongPassword
+            
+            // ✅ 检测是否需要密码（只有没传密码时才检测，传了密码还报密码错误说明密码错误）
+            if password == nil || password?.isEmpty == true {
+                if lowercasedError.contains("password") ||
+                   lowercasedError.contains("encrypted") {
+                    throw ArchiveError.passwordRequired
+                }
+            } else {
+                // 已经传了密码但还是报密码错误 → 密码错误
+                if lowercasedError.contains("password") ||
+                   lowercasedError.contains("wrong") ||
+                   lowercasedError.contains("bad") {
+                    throw ArchiveError.wrongPassword
+                }
             }
+            
             throw ArchiveError.commandFailed(errorMsg)
         }
     }
     
-    // MARK: - 实验性：并行提取
+    // MARK: - 实验性方法（保持不变）
     
     private func performParallelExtract(source: URL, target: URL, format: String, password: String?) throws {
         print("🚀 [Experimental] Parallel extract enabled for \(format)")
@@ -132,20 +161,18 @@ class ArchiveExtractor {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: toolPath)
         
-        // ✅ #1: var → let
+        var environment = ProcessInfo.processInfo.environment
+        if let pwd = password, !pwd.isEmpty {
+            environment["7Z_PASSWORD"] = pwd
+            environment["RAR_PASSWORD"] = pwd
+        }
+        process.environment = environment
+        
         let args: [String]
         if format == "7z" {
-            if let pwd = password, !pwd.isEmpty {
-                args = ["x", source.path, "-o\(target.path)", "-y", "-mmt=on", "-p\(pwd)"]
-            } else {
-                args = ["x", source.path, "-o\(target.path)", "-y", "-mmt=on"]
-            }
+            args = ["x", source.path, "-o\(target.path)", "-y", "-mmt=on"]
         } else {
-            if let pwd = password, !pwd.isEmpty {
-                args = ["x", "-mmt=on", "-p\(pwd)", source.path, target.path]
-            } else {
-                args = ["x", "-mmt=on", source.path, target.path]
-            }
+            args = ["x", "-mmt=on", source.path, target.path]
         }
         
         process.arguments = args
@@ -159,14 +186,18 @@ class ArchiveExtractor {
             let errorMsg = String(data: errorData, encoding: .utf8) ?? "Unknown error"
             
             let lowercasedError = errorMsg.lowercased()
-            if lowercasedError.contains("password") || lowercasedError.contains("wrong") || lowercasedError.contains("bad") {
-                throw ArchiveError.wrongPassword
+            if password == nil || password?.isEmpty == true {
+                if lowercasedError.contains("password") || lowercasedError.contains("encrypted") {
+                    throw ArchiveError.passwordRequired
+                }
+            } else {
+                if lowercasedError.contains("password") || lowercasedError.contains("wrong") {
+                    throw ArchiveError.wrongPassword
+                }
             }
             throw ArchiveError.commandFailed(errorMsg)
         }
     }
-    
-    // MARK: - 实验性：新提取引擎
     
     private func performNewEngineExtract(source: URL, target: URL, password: String?) throws {
         print("🚀 [Experimental] New extractor engine enabled")
@@ -189,11 +220,8 @@ class ArchiveExtractor {
             return
         }
         
-        // 有密码时回退到标准提取
         try performStandardExtract(source: source, target: target, format: "zip", password: password)
     }
-    
-    // MARK: - 实验性：内存提取
     
     private func performMemoryExtract(source: URL, target: URL, password: String?) throws {
         print("⚠️ [Unstable] Memory extract enabled - may cause high memory usage")
@@ -226,7 +254,7 @@ class ArchiveExtractor {
             let errorMsg = String(data: errorData, encoding: .utf8) ?? "Unknown error"
             
             let lowercasedError = errorMsg.lowercased()
-            if lowercasedError.contains("password") || lowercasedError.contains("wrong") || lowercasedError.contains("bad") {
+            if lowercasedError.contains("password") || lowercasedError.contains("wrong") {
                 throw ArchiveError.wrongPassword
             }
             throw ArchiveError.commandFailed(errorMsg)

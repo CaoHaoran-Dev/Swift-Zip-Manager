@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FileItem: Identifiable {
+struct FileItem: Identifiable, Sendable {
     let id = UUID()
     let url: URL
     let name: String

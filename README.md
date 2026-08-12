@@ -2,7 +2,7 @@
 
 macOS archive file manager, built with Swift + SwiftUI.
 
-> Current Version: 1.0.0-Beta.8 · In Development
+> Current Version: 1.0.0-Beta.9 · In Development
 
 ## Features
 
@@ -34,7 +34,7 @@ Download the DMG from Releases and drag the App into Applications folder.
 
 ## Usage
 
-**Keyboard Shortcuts**
+### Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
@@ -47,31 +47,45 @@ Download the DMG from Releases and drag the App into Applications folder.
 | `⌘W` | Close Window |
 | `⌘R` | Show in Finder |
 
-**Quick Start**
+### Quick Start
 
-1. Click "Open Archive" or press `⌘O` to open an existing archive
-2. Click "New Archive" or press `⌘A` to create a new archive
-   - Drag files from Finder into the window, or click "Add Files"
+1. Click **Open Archive** or press `⌘O` to open an existing archive
+2. Click **New Archive** or press `⌘A` to create a new archive
+   - Drag files from Finder into the window, or click **Add Files** / **Add Folder**
    - Select format from dropdown (ZIP, TAR, GZ, 7Z, RAR)
-   - Optionally set a password for encryption
+   - Optionally set a password for encryption (password strength indicator included)
    - Destination path is remembered for next time
-3. Browse archive contents in list or grid view
+3. Browse archive contents in **List** or **Grid** view
 4. Select files and use `⌘E` to extract, or right-click for more options
 5. Double-click folders to navigate, double-click archives to open
 
-**External Tools**
+### External Tools
 
-- 7zz is required for ZIP, 7Z, RAR extraction and 7Z creation
-- RAR tool is required for RAR creation
-- Both tools can be installed from Settings > Tools
+- **7zz** is required for ZIP, 7Z, RAR extraction and 7Z creation
+- **RAR** tool is required for RAR creation
+- Both tools can be installed from **Settings > Tools** with one click
+- SHA256 verification ensures download integrity (7zz only; RAR skips verification)
 
-**Developer Mode**
+### Developer Mode
 
-Tap the version number in About page 5 times to enable.
+Tap the version number in **About** page 5 times to enable. Developer mode provides:
+- **Debug** tools: logging, hidden files, custom tool paths, and test operations
+- **Experimental** features: parallel extraction, new extraction engine, fast ZIP processing
+- **Unstable** features: async file writing, in-memory extraction (use with caution)
+- **Advanced** settings: memory limit, custom temp directory, max concurrent operations
+
+## Update System
+
+- **Auto-check**: Automatically checks for updates every 5 app launches or every 24 hours
+- **Manual check**: Click **Check for Updates** in Settings or press `⌘U` from menu
+- **Two channels**: Stable (recommended) or Beta/RC
+- **Release notes**: Displayed with Markdown formatting
+- **SHA256 verification**: Download integrity verified via GitHub API `digest` field
+- **One-click install**: Download and install updates directly from GitHub Releases
 
 ## Known Issues
 
-- None
+- No known issues.
 
 ## License
 

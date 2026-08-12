@@ -16,16 +16,18 @@ struct ArchiveEntryRow: View {
     
     var body: some View {
         HStack {
-            Image(systemName: entry.isFolder ? "folder" : "doc")
-                .foregroundColor(entry.isFolder ? .yellow : .blue)
+            Image(systemName: entry.isDirectory ? "folder" : "doc")
+                .foregroundColor(entry.isDirectory ? .yellow : .blue)
             Text(entry.name)
             Spacer()
-            Text(entry.size).font(.caption).foregroundColor(.secondary)
+            Text(entry.formattedSize)  // ✅ 修复：size → formattedSize
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
         .contentShape(Rectangle())
         .contextMenu {
             Button("Extract") { onExtract(entry) }
-            if !entry.isFolder {
+            if !entry.isDirectory {
                 Button("Delete") { onDelete(entry) }
             }
             Divider()

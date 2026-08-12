@@ -14,18 +14,21 @@ class LanguageManager: ObservableObject {
             UserDefaults.standard.synchronize()
             Bundle.setLanguage(currentLanguage)
             NotificationCenter.default.post(name: .languageChanged, object: nil)
-            objectWillChange.send()
         }
     }
     
     let supportedLanguages = ["en", "zh-Hans", "zh-Hant"]
     
+    /// ✅ 修复：使用 NSLocale 获取本地化名称
     var languageDisplayNames: [String: String] {
-        return [
-            "en": "English",
-            "zh-Hans": "简体中文",
-            "zh-Hant": "繁體中文"
-        ]
+        var result: [String: String] = [:]
+        for code in supportedLanguages {
+            // ✅ 使用 NSLocale 的 displayName 方法
+            let nsLocale = NSLocale(localeIdentifier: NSLocale.current.identifier)
+            let displayName = nsLocale.displayName(forKey: .identifier, value: code) ?? code
+            result[code] = displayName
+        }
+        return result
     }
     
     init() {
@@ -71,11 +74,9 @@ extension Bundle {
         currentBundle = bundle
     }
     
-    // ✅ #10: 增加 fallback，如果找不到 key 返回 key 本身
     static func localizedString(forKey key: String, value: String?, table: String?) -> String {
         if let bundle = currentBundle {
             let result = bundle.localizedString(forKey: key, value: value, table: table)
-            // 如果结果等于 key，说明没有找到本地化字符串，尝试从主 bundle 获取
             if result == key {
                 return Bundle.main.localizedString(forKey: key, value: key, table: table)
             }

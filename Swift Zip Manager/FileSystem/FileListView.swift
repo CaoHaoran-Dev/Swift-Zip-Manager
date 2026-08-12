@@ -9,17 +9,19 @@ import SwiftUI
 
 struct FileListView: View {
     let items: [FileItem]
+    @Binding var selectedIDs: Set<UUID>
     let onItemTap: (FileItem) -> Void
     
-    @State private var selectedItemIDs = Set<UUID>()
-    
     var body: some View {
-        Table(items, selection: $selectedItemIDs) {
-            TableColumn("Name") { item in
-                FileListItemRow(item: item, onTap: { onItemTap(item) })
+        Table(items, selection: $selectedIDs) {
+            TableColumn("filelist.column.name".localized) { item in
+                FileListItemRow(
+                    item: item,
+                    onTap: { onItemTap(item) }
+                )
             }
-            TableColumn("Size", value: \.sizeFormatted).width(100)
-            TableColumn("Modified", value: \.dateFormatted).width(150)
+            TableColumn("filelist.column.size".localized, value: \.sizeFormatted).width(100)
+            TableColumn("filelist.column.modified".localized, value: \.dateFormatted).width(150)
         }
         .tableStyle(.inset)
     }
@@ -46,15 +48,15 @@ struct FileItemContextMenu: View {
     
     var body: some View {
         if item.isDirectory {
-            Button("Open") {
+            Button("filelist.context.open".localized) {
                 NotificationCenter.default.post(name: .openArchiveNotification, object: item.url)
             }
         } else if item.isArchive {
-            Button("Open Archive") {
+            Button("filelist.context.open.archive".localized) {
                 NotificationCenter.default.post(name: .openArchiveNotification, object: item.url)
             }
         }
-        Button("Show in Finder") {
+        Button("filelist.context.show.finder".localized) {
             NSWorkspace.shared.activateFileViewerSelecting([item.url])
         }
     }

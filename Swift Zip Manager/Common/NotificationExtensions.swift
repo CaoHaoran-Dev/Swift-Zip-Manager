@@ -5,9 +5,12 @@
 //  Created by Haoran on 2026/8/9.
 //
 
+// Common/NotificationExtensions.swift
+
 import Foundation
 
 extension Notification.Name {
+    // 应用内通知
     static let languageChanged = Notification.Name("languageChangedNotification")
     static let openArchive = Notification.Name("openArchiveNotification")
     static let showOpenPanel = Notification.Name("showOpenPanelNotification")
@@ -20,7 +23,7 @@ extension Notification.Name {
     static let developerSettingsChanged = Notification.Name("developerSettingsChanged")
     static let developerSettingsReset = Notification.Name("developerSettingsReset")
     
-    // 应用内通知
+    // 操作通知
     static let checkForUpdatesNotification = Notification.Name("checkForUpdatesNotification")
     static let openArchiveNotification = Notification.Name("openArchiveNotification")
     static let showOpenPanelNotification = Notification.Name("showOpenPanelNotification")
@@ -29,4 +32,7 @@ extension Notification.Name {
     static let extractAllNotification = Notification.Name("extractAllNotification")
     static let deleteSelectedNotification = Notification.Name("deleteSelectedNotification")
     static let showInFinderNotification = Notification.Name("showInFinderNotification")
+    
+    // ✅ 新增：密码弹窗通知
+    static let showPasswordDialogNotification = Notification.Name("showPasswordDialogNotification")
 }

@@ -115,7 +115,6 @@ struct SidebarView: View {
                 Section("sidebar.recent".localized) {
                     ForEach(recentManager.recentFiles.prefix(10), id: \.self) { file in
                         Button(action: {
-                            // ✅ #13: 打开归档时清空侧边栏选中状态
                             selectedSidebarItem = nil
                             manager.loadArchive(file.url, recentManager: recentManager)
                         }) {
@@ -132,7 +131,7 @@ struct SidebarView: View {
                         }
                         .buttonStyle(.plain)
                         .contextMenu {
-                            Button("Remove") {
+                            Button("sidebar.remove".localized) {
                                 if let index = recentManager.recentFiles.firstIndex(where: { $0.id == file.id }) {
                                     recentManager.remove(at: IndexSet(integer: index))
                                 }
@@ -155,14 +154,12 @@ struct SidebarView: View {
             
             Section {
                 SidebarRow(icon: "gear", title: "sidebar.settings".localized, isSelected: false, color: .gray) {
-                    print("🔧 Settings button tapped in SidebarView")
                     appState.showSettings = true
                 }
             }
         }
         .listStyle(SidebarListStyle())
         .frame(minWidth: 220, maxWidth: 280)
-        // ✅ #13: 监听归档加载完成，清空选中状态
         .onReceive(manager.$currentArchive) { archive in
             if archive != nil {
                 selectedSidebarItem = nil
@@ -197,7 +194,6 @@ struct SidebarView: View {
         
         panel.begin { response in
             if response == .OK, let url = panel.url {
-                // ✅ #13: 打开归档时清空侧边栏选中状态
                 selectedSidebarItem = nil
                 manager.loadArchive(url, recentManager: recentManager)
             }

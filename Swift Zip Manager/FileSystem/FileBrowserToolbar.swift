@@ -10,7 +10,7 @@ import SwiftUI
 struct FileBrowserToolbar: View {
     @Binding var viewMode: FileBrowserView.ViewMode
     let onGoUp: () -> Void
-    let onExtractAll: (() -> Void)?
+    let onExtractAll: () -> Void
     
     var body: some View {
         HStack {
@@ -30,11 +30,11 @@ struct FileBrowserToolbar: View {
             .pickerStyle(.segmented)
             .frame(width: 80)
             
-            if let extractAll = onExtractAll {
-                Button("Extract All", action: extractAll)
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-            }
+            // ✅ 始终显示 "Extract All" 按钮
+            Button(action: onExtractAll) {
+                Label("archive.extract.all".localized, systemImage: "tray.and.arrow.down")            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
         }
         .padding(8)
         .background(Color(NSColor.controlBackgroundColor).opacity(0.3))

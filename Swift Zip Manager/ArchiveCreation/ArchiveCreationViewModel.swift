@@ -20,28 +20,29 @@ class ArchiveCreationViewModel: ObservableObject {
     @Published var encryptionPassword = ""
     @Published var confirmPassword = ""
     @Published var showPasswordMismatch = false
+    @Published var showToolMissingAlert = false
+    @Published var missingToolName = ""
     
     let formats = ["zip", "tar", "gz", "7z", "rar"]
     private let lastDestinationKey = "LastArchiveDestination"
+    
+    /// 文件大小缓存（避免重复读取）
+    private var fileSizeCache: [URL: Int64] = [:]
     
     var supportsEncryption: Bool {
         format == "zip" || format == "7z" || format == "rar"
     }
     
-    // MARK: - 创建按钮启用条件（修复版）
-    
+    /// 创建按钮启用条件（唯一验证入口）
     var canCreate: Bool {
-        // 基础条件：有文件 + 有目标路径
         guard !files.isEmpty, destination != nil else {
             return false
         }
         
-        // 加密开启时：密码不能为空
         if encryptArchive {
             guard !encryptionPassword.isEmpty else {
                 return false
             }
-            // ✅ 新增：密码和确认密码必须匹配
             guard encryptionPassword == confirmPassword else {
                 return false
             }
@@ -50,41 +51,47 @@ class ArchiveCreationViewModel: ObservableObject {
         return true
     }
     
-    // MARK: - 密码验证（用于点击 Create 后的额外校验）
-    
-    func validatePassword() -> Bool {
-        if encryptArchive {
-            if encryptionPassword != confirmPassword {
-                showPasswordMismatch = true
-                return false
-            }
-            if encryptionPassword.isEmpty {
-                return false
-            }
-        }
-        showPasswordMismatch = false
-        return true
+    /// 密码强度（0-4）
+    var passwordStrength: Int {
+        let pwd = encryptionPassword
+        guard !pwd.isEmpty else { return 0 }
+        
+        var score = 0
+        if pwd.count >= 8 { score += 1 }
+        if pwd.rangeOfCharacter(from: .uppercaseLetters) != nil { score += 1 }
+        if pwd.rangeOfCharacter(from: .decimalDigits) != nil { score += 1 }
+        if pwd.rangeOfCharacter(from: .symbols) != nil { score += 1 }
+        return score
     }
     
     // MARK: - 文件管理
     
     func addFiles(_ urls: [URL]) {
         files.append(contentsOf: urls)
+        // 预计算文件大小
+        for url in urls {
+            if fileSizeCache[url] == nil {
+                let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0
+                fileSizeCache[url] = size
+            }
+        }
         updateNameSuggestion()
     }
     
     func removeFile(_ url: URL) {
         files.removeAll { $0 == url }
+        fileSizeCache.removeValue(forKey: url)
         updateNameSuggestion()
     }
     
     func clearFiles() {
         files.removeAll()
+        fileSizeCache.removeAll()
         name = ""
     }
     
     func fileSize(_ url: URL) -> String {
-        let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0
+        let size = fileSizeCache[url] ?? 0
         return ByteCountFormatter.string(fromByteCount: size, countStyle: .file)
     }
     
@@ -103,8 +110,13 @@ class ArchiveCreationViewModel: ObservableObject {
     
     private func updateNameSuggestion() {
         if name.isEmpty && !files.isEmpty {
-            let firstFileName = files.first?.deletingPathExtension().lastPathComponent ?? "Archive"
-            name = firstFileName
+            if files.count == 1 {
+                name = files.first?.deletingPathExtension().lastPathComponent ?? "Archive"
+            } else {
+                // 多文件：使用父目录名
+                let parent = files.first?.deletingLastPathComponent().lastPathComponent
+                name = parent ?? "Archive"
+            }
         }
     }
     

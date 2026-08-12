@@ -9,17 +9,20 @@ import SwiftUI
 
 struct FileGridView: View {
     let items: [FileItem]
+    @Binding var selectedIDs: Set<UUID>
     let onItemTap: (FileItem) -> Void
     
-    @State private var selectedItemIDs = Set<UUID>()
+    private let columns = [
+        GridItem(.adaptive(minimum: 100), spacing: 16)
+    ]
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 20) {
+            LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(items) { item in
                     FileGridItem(
                         item: item,
-                        isSelected: selectedItemIDs.contains(item.id)
+                        isSelected: selectedIDs.contains(item.id)
                     )
                     .onTapGesture { onItemTap(item) }
                     .contextMenu { FileItemContextMenu(item: item) }
@@ -35,13 +38,14 @@ struct FileGridItem: View {
     let isSelected: Bool
     
     var body: some View {
-        VStack {
+        VStack(spacing: 6) {
             Image(systemName: item.icon)
                 .font(.system(size: 40))
                 .foregroundColor(item.iconColor)
             Text(item.name)
                 .font(.caption)
                 .lineLimit(1)
+                .truncationMode(.middle)
             if !item.isDirectory {
                 Text(item.sizeFormatted)
                     .font(.caption2)
@@ -49,8 +53,12 @@ struct FileGridItem: View {
             }
         }
         .frame(width: 90)
-        .padding(8)
+        .padding(10)
         .background(isSelected ? Color.accentColor.opacity(0.2) : Color.clear)
-        .cornerRadius(8)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
+        )
     }
 }

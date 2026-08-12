@@ -151,6 +151,5 @@ struct ToolsSettingsView: View {
         let success = toolInstaller.deleteTools()
         toolStatusMessage = success ? "settings.tools.deleted".localized : "settings.tools.delete.failed".localized
         showStatusAlert = true
-        // ✅ 不再需要重启，只刷新状态
     }
 }

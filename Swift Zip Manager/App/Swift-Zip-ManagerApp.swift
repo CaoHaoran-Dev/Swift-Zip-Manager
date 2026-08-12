@@ -28,18 +28,25 @@ struct SwiftZipManagerApp: App {
                     appState.showHelp = true
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .checkForUpdatesNotification)) { _ in
-                    updateChecker.checkForUpdates(
+                    updateChecker.manualCheckForUpdates(
                         includePrerelease: includePrereleaseUpdates,
                         showIfNone: true
                     )
                 }
                 .onAppear {
-                    if autoCheckUpdates {
+                    // ✅ 自动检查更新（每 5 次启动检查一次）
+                    if autoCheckUpdates && appState.shouldCheckForUpdates() {
+                        print("🔄 [App] Auto-checking for updates (launch count: \(appState.launchCount))")
+                        appState.recordUpdateCheck()
+                        
+                        // 延迟 3 秒检查，让应用先启动完成
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            updateChecker.checkForUpdates(
+                            updateChecker.autoCheckForUpdates(
                                 includePrerelease: includePrereleaseUpdates
                             )
                         }
+                    } else {
+                        print("📱 [App] Auto-check skipped (launch count: \(appState.launchCount), interval: \(appState.shouldCheckForUpdates() ? "yes" : "no"))")
                     }
                 }
                 // ✅ 监听 Settings 和 Help 状态
@@ -52,6 +59,14 @@ struct SwiftZipManagerApp: App {
                     if show {
                         WindowManager.shared.openHelp(appState: appState)
                     }
+                }
+                // ✅ 显示检查结果（手动检查无更新时）
+                .alert(isPresented: $updateChecker.showCheckResult) {
+                    Alert(
+                        title: Text("settings.updates.check.title".localized),
+                        message: Text(updateChecker.checkResultMessage ?? ""),
+                        dismissButton: .default(Text("alert.ok".localized))
+                    )
                 }
         }
         .commands {
@@ -115,7 +130,7 @@ struct SwiftZipManagerApp: App {
                 
                 Divider()
                 Button("Check for Updates...") {
-                    updateChecker.checkForUpdates(
+                    updateChecker.manualCheckForUpdates(
                         includePrerelease: includePrereleaseUpdates,
                         showIfNone: true
                     )

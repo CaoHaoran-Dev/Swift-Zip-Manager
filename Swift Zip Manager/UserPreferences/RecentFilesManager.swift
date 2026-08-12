@@ -12,17 +12,27 @@ class RecentFilesManager: ObservableObject {
     private let maxCount = AppConstants.maxRecentFiles
     private let key = "RecentFiles"
     
-    // ✅ #9: 使用串行队列保证线程安全
-    private let queue = DispatchQueue(label: "com.haoran.SwiftZipManager.recentFiles")
+    /// 内部缓存（线程安全）
+    private var cachedFiles: [RecentFile] = []
+    private let queue = DispatchQueue(label: "com.haoran.SwiftZipManager.recentFiles", attributes: .concurrent)
+    private let lock = NSLock()
     
     init() {
         loadData()
     }
     
+    // MARK: - 加载
+    
     func loadData() {
-        queue.async {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            
             if let data = UserDefaults.standard.data(forKey: self.key),
                let files = try? JSONDecoder().decode([RecentFile].self, from: data) {
+                self.lock.lock()
+                self.cachedFiles = files
+                self.lock.unlock()
+                
                 DispatchQueue.main.async {
                     self.recentFiles = files
                 }
@@ -30,18 +40,22 @@ class RecentFilesManager: ObservableObject {
         }
     }
     
+    // MARK: - 添加
+    
     func add(_ url: URL) {
-        queue.async { [weak self] in
+        queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
             
-            var files = self.recentFiles
-            // 去重（按路径）
+            self.lock.lock()
+            var files = self.cachedFiles
             files.removeAll { $0.url.path == url.path }
             let newFile = RecentFile(url: url)
             files.insert(newFile, at: 0)
             if files.count > self.maxCount {
                 files = Array(files.prefix(self.maxCount))
             }
+            self.cachedFiles = files
+            self.lock.unlock()
             
             DispatchQueue.main.async {
                 self.recentFiles = files
@@ -49,13 +63,18 @@ class RecentFilesManager: ObservableObject {
             self.saveData(files)
         }
     }
+    
+    // MARK: - 删除
     
     func remove(at indexSet: IndexSet) {
-        queue.async { [weak self] in
+        queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
             
-            var files = self.recentFiles
+            self.lock.lock()
+            var files = self.cachedFiles
             files.remove(atOffsets: indexSet)
+            self.cachedFiles = files
+            self.lock.unlock()
             
             DispatchQueue.main.async {
                 self.recentFiles = files
@@ -64,9 +83,15 @@ class RecentFilesManager: ObservableObject {
         }
     }
     
+    // MARK: - 清空
+    
     func clear() {
-        queue.async { [weak self] in
+        queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
+            
+            self.lock.lock()
+            self.cachedFiles = []
+            self.lock.unlock()
             
             DispatchQueue.main.async {
                 self.recentFiles = []
@@ -75,9 +100,13 @@ class RecentFilesManager: ObservableObject {
         }
     }
     
+    // MARK: - 刷新
+    
     func refresh() {
         loadData()
     }
+    
+    // MARK: - 保存
     
     private func saveData(_ files: [RecentFile]) {
         if let data = try? JSONEncoder().encode(files) {

@@ -55,7 +55,7 @@ struct AboutSettingsView: View {
                 
                 Divider()
                 
-                Link("GitHub", destination: URL(string: githubURL)!)
+                Link("settings.about.github".localized, destination: URL(string: githubURL)!)
                 Text("settings.about.license".localized).font(.caption).foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

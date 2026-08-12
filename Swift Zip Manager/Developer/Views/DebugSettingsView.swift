@@ -76,43 +76,51 @@ struct DebugSettingsView: View {
             GroupBox {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        // ✅ #22: 实际调用 Manager 的测试按钮
+                        // ✅ 真实测试：加载测试归档
                         Button("developer.debug.test.load".localized) {
                             appState.addDevLog("Testing archive load...", type: .info)
-                            // 尝试加载一个测试归档
+                            
                             let testURL = FileManager.default.homeDirectoryForCurrentUser
                                 .appendingPathComponent("Desktop")
                                 .appendingPathComponent("test.zip")
+                            
                             if FileManager.default.fileExists(atPath: testURL.path) {
-                                // 需要 ArchiveManager 实例，但这里无法直接获取
-                                // 改为模拟日志
-                                appState.addDevLog("Test archive load simulated (test.zip not found)", type: .warning)
+                                // 通过通知触发加载
+                                NotificationCenter.default.post(
+                                    name: .openArchiveNotification,
+                                    object: testURL
+                                )
+                                appState.addDevLog("✅ Loaded test archive: \(testURL.lastPathComponent)", type: .success)
+                                testResult = "Loaded: \(testURL.lastPathComponent)"
                             } else {
-                                appState.addDevLog("Test archive load simulated", type: .info)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    appState.addDevLog("Archive load simulation completed", type: .success)
-                                }
+                                appState.addDevLog("⚠️ test.zip not found on Desktop", type: .warning)
+                                testResult = "test.zip not found"
                             }
                         }
                         .buttonStyle(.bordered)
                         
+                        // ✅ 真实测试：模拟错误
                         Button("developer.debug.test.error".localized) {
-                            appState.addDevLog("Simulating extraction error", type: .warning)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                appState.addDevLog("Extraction failed: Corrupted archive", type: .error)
-                            }
+                            appState.addDevLog("Testing error handling...", type: .info)
+                            
+                            let simulatedError = ArchiveError.commandFailed("Corrupted archive")
+                            appState.addDevLog("Simulated error: \(simulatedError.localizedDescription)", type: .error)
+                            testResult = "Error simulated: \(simulatedError.localizedDescription)"
                         }
                         .buttonStyle(.bordered)
                         
+                        // ✅ 真实测试：检测工具
                         Button("developer.debug.test.tools".localized) {
                             let resolver = ToolPathResolver()
                             let sevenzz = resolver.resolve("7zz")
                             let rar = resolver.resolve("rar")
-                            appState.addDevLog("Tool paths: 7zz=\(sevenzz ?? "not found"), RAR=\(rar ?? "not found")", type: .info)
+                            let status = "7zz: \(sevenzz ?? "not found")\nRAR: \(rar ?? "not found")"
+                            appState.addDevLog("Tool paths:\n\(status)", type: .info)
+                            testResult = status
                         }
                         .buttonStyle(.bordered)
                         
-                        // ✅ #22: 新增测试开关状态
+                        // ✅ 真实测试：开关状态
                         Button("developer.debug.test.switches".localized) {
                             let status = """
                             Parallel: \(appState.experimentalParallelExtract)
@@ -122,15 +130,17 @@ struct DebugSettingsView: View {
                             MemoryExtract: \(appState.unstableMemoryExtract)
                             """
                             appState.addDevLog("Switch status:\n\(status)", type: .info)
+                            testResult = status
                         }
                         .buttonStyle(.bordered)
                     }
                     
-                    // ✅ #22: 显示测试结果
+                    // ✅ 显示测试结果
                     if !testResult.isEmpty {
                         Text(testResult)
                             .font(.caption)
                             .foregroundColor(.secondary)
+                            .padding(.top, 4)
                     }
                 }
                 .padding()

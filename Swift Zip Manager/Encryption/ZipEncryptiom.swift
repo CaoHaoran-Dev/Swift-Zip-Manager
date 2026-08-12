@@ -1,5 +1,5 @@
 //
-//  SevenZipEncryption.swift
+//  ZipEncryption.swift
 //  Swift Zip Manager
 //
 //  Created by Haoran on 2026/8/9.
@@ -7,30 +7,19 @@
 
 import Foundation
 
-class SevenZipEncryption: ArchiveEncryption {
-    private let toolResolver: ToolPathResolver
-    
-    init(toolResolver: ToolPathResolver = ToolPathResolver()) {
-        self.toolResolver = toolResolver
-    }
+class ZipEncryption: ArchiveEncryption {
     
     func create(sourceURLs: [URL], destinationURL: URL, password: String?) throws {
-        guard let toolPath = toolResolver.resolve("7zz") else {
-            throw ArchiveError.toolNotFound("7zz")
-        }
-        
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: toolPath)
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/zip")
         
-        var args = ["a", destinationURL.path]
+        var args = ["-r"]
         
         if let pwd = password, !pwd.isEmpty {
-            var environment = ProcessInfo.processInfo.environment
-            environment["7Z_PASSWORD"] = pwd
-            process.environment = environment
-            args.append("-p")
-            args.append("-mhe=on")
+            args.append("-P")
+            args.append(pwd)
         }
+        args.append(destinationURL.path)
         args.append(contentsOf: sourceURLs.map { $0.path })
         
         process.arguments = args
@@ -45,25 +34,18 @@ class SevenZipEncryption: ArchiveEncryption {
         if process.terminationStatus != 0 {
             let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
             let errorMsg = String(data: errorData, encoding: .utf8) ?? "Unknown error"
-            throw ArchiveError.commandFailed("7z creation failed: \(errorMsg)")
+            throw ArchiveError.commandFailed("Zip creation failed: \(errorMsg)")
         }
     }
     
     func extract(sourceURL: URL, destinationURL: URL, password: String?) throws {
-        guard let toolPath = toolResolver.resolve("7zz") else {
-            throw ArchiveError.toolNotFound("7zz")
-        }
-        
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: toolPath)
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/unzip")
         
-        var args = ["x", sourceURL.path, "-o\(destinationURL.path)", "-y"]
-        
+        var args = ["-o", sourceURL.path, "-d", destinationURL.path]
         if let pwd = password, !pwd.isEmpty {
-            var environment = ProcessInfo.processInfo.environment
-            environment["7Z_PASSWORD"] = pwd
-            process.environment = environment
-            args.append("-p")
+            args.append("-P")
+            args.append(pwd)
         }
         
         process.arguments = args
@@ -89,14 +71,14 @@ class SevenZipEncryption: ArchiveEncryption {
 
 // MARK: - 静态便捷方法（向后兼容）
 
-extension SevenZipEncryption {
-    static func createEncrypted7z(sourceURLs: [URL], destinationURL: URL, password: String, toolPath: String) throws {
-        let instance = SevenZipEncryption()
+extension ZipEncryption {
+    static func createEncryptedZip(sourceURLs: [URL], destinationURL: URL, password: String) throws {
+        let instance = ZipEncryption()
         try instance.create(sourceURLs: sourceURLs, destinationURL: destinationURL, password: password)
     }
     
-    static func extractEncrypted7z(sourceURL: URL, destinationURL: URL, password: String?, toolPath: String) throws {
-        let instance = SevenZipEncryption()
+    static func extractEncryptedZip(sourceURL: URL, destinationURL: URL, password: String?) throws {
+        let instance = ZipEncryption()
         try instance.extract(sourceURL: sourceURL, destinationURL: destinationURL, password: password)
     }
 }

@@ -28,13 +28,19 @@ struct ContentView: View {
             .environmentObject(appState)
             .environmentObject(languageManager)
         } detail: {
-            FileBrowserView(
-                manager: manager,
-                recentManager: recentManager,
-                currentDirectory: $currentDirectory,
-                viewMode: $viewMode
-            )
-            .environmentObject(languageManager)
+            // ✅ 由上层决定显示哪个视图
+            if manager.currentArchive != nil {
+                ArchiveContentView(manager: manager)
+                    .environmentObject(languageManager)
+            } else {
+                FileBrowserView(
+                    manager: manager,
+                    recentManager: recentManager,
+                    currentDirectory: $currentDirectory,
+                    viewMode: $viewMode
+                )
+                .environmentObject(languageManager)
+            }
         }
         .background(VisualEffectView(material: .hudWindow, blendingMode: .behindWindow))
         .alert(manager.error ?? "alert.done".localized, isPresented: $manager.showAlert) {
@@ -54,10 +60,8 @@ struct ContentView: View {
                 WindowManager.shared.openHelp(appState: appState)
             }
         }
-        // ✅ #21: 绑定 AppState 到 Manager
         .onAppear {
             manager.appState = appState
-            
             recentManager.refresh()
             
             let missing = toolInstaller.checkTools()

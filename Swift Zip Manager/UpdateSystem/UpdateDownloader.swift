@@ -7,6 +7,7 @@
 
 import Foundation
 import AppKit
+import CryptoKit
 
 class UpdateDownloader: NSObject, ObservableObject {
     @Published var downloadProgress: Double = 0
@@ -20,7 +21,6 @@ class UpdateDownloader: NSObject, ObservableObject {
     private var progressObservation: NSKeyValueObservation?
     private var completionHandler: ((Result<URL, Error>) -> Void)?
     
-    /// 下载目标路径
     private var downloadedZipURL: URL {
         let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let folder = appSupport.appendingPathComponent(bundleIdentifier)
@@ -32,10 +32,10 @@ class UpdateDownloader: NSObject, ObservableObject {
     
     func download(
         from url: URL,
+        expectedSHA256: String? = nil,
         progress: @escaping (Double, String) -> Void,
         completion: @escaping (Result<URL, Error>) -> Void
     ) {
-        // 如果已在下载，先取消
         if isDownloading {
             cancelDownload()
         }
@@ -45,36 +45,29 @@ class UpdateDownloader: NSObject, ObservableObject {
         downloadStatus = "Starting download..."
         completionHandler = completion
         
-        // 确保目标目录存在
         let targetFolder = downloadedZipURL.deletingLastPathComponent()
         try? fileManager.createDirectory(at: targetFolder, withIntermediateDirectories: true)
         
-        // 清理旧的下载文件
         if fileManager.fileExists(atPath: downloadedZipURL.path) {
             try? fileManager.removeItem(at: downloadedZipURL)
         }
         
-        // ✅ 配置 URLSession
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 300
         config.timeoutIntervalForResource = 600
         
-        // ✅ 设置 User-Agent（GitHub 要求）
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let userAgent = "Swift-Zip-Manager/\(appVersion) (macOS)"
         config.httpAdditionalHeaders = [
-            "User-Agent": userAgent,
+            "User-Agent": "Swift-Zip-Manager/\(appVersion) (macOS)",
             "Accept": "application/octet-stream"
         ]
-        
-        // ✅ 允许重定向
         config.httpShouldUsePipelining = true
         
         let session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
         
         downloadTask = session.downloadTask(with: url)
+        downloadTask?.expectedSHA256 = expectedSHA256
         
-        // ✅ 观察下载进度
         progressObservation = downloadTask?.progress.observe(\.fractionCompleted) { [weak self] progressObj, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
@@ -85,7 +78,10 @@ class UpdateDownloader: NSObject, ObservableObject {
             }
         }
         
-        print("📥 Starting download from: \(url)")
+        print("📥 [Downloader] Starting download from: \(url)")
+        if let sha = expectedSHA256, !sha.isEmpty {
+            print("📥 [Downloader] Expected SHA256: \(sha.prefix(16))...")
+        }
         downloadTask?.resume()
     }
     
@@ -102,7 +98,7 @@ class UpdateDownloader: NSObject, ObservableObject {
         }
         
         completionHandler = nil
-        print("📥 Download cancelled")
+        print("📥 [Downloader] Download cancelled")
     }
     
     func getDownloadedZipURL() -> URL? {
@@ -111,6 +107,65 @@ class UpdateDownloader: NSObject, ObservableObject {
         }
         return downloadedZipURL
     }
+    
+    // MARK: - SHA256 校验
+    
+    private func verifySHA256(at url: URL, expected: String) -> Bool {
+        guard let fileHandle = FileHandle(forReadingAtPath: url.path) else {
+            print("❌ [Downloader] Cannot open file for SHA256")
+            return false
+        }
+        defer { try? fileHandle.close() }
+        
+        var hasher = SHA256()
+        while let data = try? fileHandle.read(upToCount: 1024 * 1024), !data.isEmpty {
+            hasher.update(data: data)
+        }
+        
+        let digest = hasher.finalize()
+        let calculated = digest.map { String(format: "%02x", $0) }.joined()
+        
+        let result = calculated.lowercased() == expected.lowercased()
+        if result {
+            print("✅ [Downloader] SHA256 verified: \(calculated.prefix(16))...")
+        } else {
+            print("❌ [Downloader] SHA256 mismatch: expected \(expected.prefix(16))..., got \(calculated.prefix(16))...")
+        }
+        return result
+    }
+    
+    // MARK: - ZIP 完整性验证（备用）
+    
+    private func verifyZipIntegrity(at url: URL) -> Bool {
+        guard let attrs = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attrs[.size] as? Int64,
+              size > 0 else {
+            print("❌ [Downloader] ZIP file is empty")
+            return false
+        }
+        print("📥 [Downloader] ZIP size: \(size) bytes")
+        
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/ditto")
+        process.arguments = ["-x", "-k", url.path, "/dev/null"]
+        process.standardOutput = Pipe()
+        process.standardError = Pipe()
+        
+        do {
+            try process.run()
+            process.waitUntilExit()
+            if process.terminationStatus == 0 {
+                print("✅ [Downloader] ZIP integrity verified")
+                return true
+            } else {
+                print("❌ [Downloader] ZIP integrity check failed")
+                return false
+            }
+        } catch {
+            print("❌ [Downloader] ZIP integrity check error: \(error)")
+            return false
+        }
+    }
 }
 
 // MARK: - URLSessionDownloadDelegate
@@ -118,18 +173,56 @@ class UpdateDownloader: NSObject, ObservableObject {
 extension UpdateDownloader: URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        print("📥 Download finished, moving file...")
+        print("📥 [Downloader] Download finished, moving file...")
         
         do {
-            // 如果已有旧的 zip 文件，删除
             if fileManager.fileExists(atPath: downloadedZipURL.path) {
                 try fileManager.removeItem(at: downloadedZipURL)
             }
             
-            // 移动下载完成的文件到目标位置
             try fileManager.moveItem(at: location, to: downloadedZipURL)
             
-            print("✅ Download saved to: \(downloadedZipURL.path)")
+            let expectedSHA = downloadTask.expectedSHA256
+            
+            if let sha = expectedSHA, !sha.isEmpty {
+                guard verifySHA256(at: downloadedZipURL, expected: sha) else {
+                    try? fileManager.removeItem(at: downloadedZipURL)
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.isDownloading = false
+                        self.downloadStatus = "Download failed - SHA256 mismatch"
+                        self.progressObservation?.invalidate()
+                        self.progressObservation = nil
+                        self.completionHandler?(.failure(NSError(
+                            domain: "UpdateDownloader",
+                            code: -1,
+                            userInfo: [NSLocalizedDescriptionKey: "SHA256 mismatch - file may be corrupted"]
+                        )))
+                        self.completionHandler = nil
+                    }
+                    return
+                }
+            } else {
+                guard verifyZipIntegrity(at: downloadedZipURL) else {
+                    try? fileManager.removeItem(at: downloadedZipURL)
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.isDownloading = false
+                        self.downloadStatus = "Download failed - corrupt file"
+                        self.progressObservation?.invalidate()
+                        self.progressObservation = nil
+                        self.completionHandler?(.failure(NSError(
+                            domain: "UpdateDownloader",
+                            code: -1,
+                            userInfo: [NSLocalizedDescriptionKey: "Downloaded file is corrupt or invalid"]
+                        )))
+                        self.completionHandler = nil
+                    }
+                    return
+                }
+            }
+            
+            print("✅ [Downloader] Download verified and saved to: \(downloadedZipURL.path)")
             
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -142,7 +235,7 @@ extension UpdateDownloader: URLSessionDownloadDelegate {
             }
             
         } catch {
-            print("❌ Failed to move downloaded file: \(error)")
+            print("❌ [Downloader] Failed to move downloaded file: \(error)")
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.isDownloading = false
@@ -158,20 +251,12 @@ extension UpdateDownloader: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
             let nsError = error as NSError
-            
-            // 用户取消不算错误
             if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled {
-                print("📥 Download cancelled by user")
+                print("📥 [Downloader] Download cancelled by user")
                 return
             }
             
-            // ✅ 打印详细错误信息
-            print("❌ Download error:")
-            print("   Domain: \(nsError.domain)")
-            print("   Code: \(nsError.code)")
-            print("   Description: \(nsError.localizedDescription)")
-            print("   UserInfo: \(nsError.userInfo)")
-            
+            print("❌ [Downloader] Download error: \(error.localizedDescription)")
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.isDownloading = false
@@ -181,19 +266,30 @@ extension UpdateDownloader: URLSessionDownloadDelegate {
                 self.completionHandler?(.failure(error))
                 self.completionHandler = nil
             }
-        } else {
-            print("✅ Download task completed successfully")
         }
     }
 }
 
-// MARK: - URLSessionTaskDelegate (处理重定向)
+// MARK: - URLSessionTaskDelegate
 
 extension UpdateDownloader: URLSessionTaskDelegate {
-    
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
-        print("🔄 Redirecting to: \(request.url?.absoluteString ?? "nil")")
-        // ✅ 允许重定向
+        print("🔄 [Downloader] Redirecting to: \(request.url?.absoluteString ?? "nil")")
         completionHandler(request)
+    }
+}
+
+// MARK: - 存储期望 SHA256 到 Task
+
+private var expectedSHA256Key: UInt8 = 0
+
+extension URLSessionTask {
+    var expectedSHA256: String? {
+        get {
+            return objc_getAssociatedObject(self, &expectedSHA256Key) as? String
+        }
+        set {
+            objc_setAssociatedObject(self, &expectedSHA256Key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }

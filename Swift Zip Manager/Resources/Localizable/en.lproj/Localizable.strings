@@ -53,6 +53,7 @@
 "sidebar.recent" = "Recent";
 "sidebar.clear.all" = "Clear All";
 "sidebar.settings" = "Settings";
+"sidebar.remove" = "Remove";
 
 /* ========================================
    Right Content / File Browser
@@ -70,12 +71,24 @@
 "browser.loading" = "Loading...";
 
 /* ========================================
-   File Browser (批次6 新增)
+   File Browser
    ======================================== */
 "filebrowser.loading" = "Loading...";
 "filebrowser.empty.title" = "Empty Folder";
 "filebrowser.empty.message" = "This folder is empty";
 "filebrowser.empty.browse" = "Browse...";
+"filebrowser.drop.error" = "Failed to process dropped files";
+"filebrowser.toolbar.go.up" = "Go Up";
+
+/* ========================================
+   File List
+   ======================================== */
+"filelist.column.name" = "Name";
+"filelist.column.size" = "Size";
+"filelist.column.modified" = "Modified";
+"filelist.context.open" = "Open";
+"filelist.context.open.archive" = "Open Archive";
+"filelist.context.show.finder" = "Show in Finder";
 
 /* ========================================
    Archive Content
@@ -87,6 +100,10 @@
 "archive.password.cancel" = "Cancel";
 "archive.password.extract" = "Extract";
 "archive.password.wrong" = "Wrong password";
+"archive.password.strength.weak" = "Weak";
+"archive.password.strength.fair" = "Fair";
+"archive.password.strength.good" = "Good";
+"archive.password.strength.strong" = "Strong";
 
 "archive.extract.selected" = "Extract";
 "archive.delete" = "Delete";
@@ -97,18 +114,30 @@
 "archive.extraction.timeout" = "Extraction timed out";
 "archive.creation.success" = "Archive created successfully";
 "archive.creation.failed" = "Creation failed: %@";
+"archive.error.invalid.parameters" = "Invalid parameters";
+"archive.no.archive.open" = "No archive is currently open";
 
 /* ========================================
-   Archive Delete (批次2 新增)
+   Archive Delete
    ======================================== */
 "archive.deleting" = "Deleting...";
 "archive.delete.success" = "Successfully deleted %d file(s)";
 "archive.delete.all.failed" = "Failed to delete all files";
 "archive.delete.partial" = "Deleted %d of %d files";
 "archive.delete.failed" = "Delete failed";
+"archive.delete.confirm.title" = "Delete Files";
+"archive.delete.confirm.message" = "Are you sure you want to delete %d file(s)?";
+"archive.delete.confirm.delete" = "Delete";
+"archive.delete.confirm.cancel" = "Cancel";
 
 /* ========================================
-   File Operations (批次6 新增)
+   Archive Empty
+   ======================================== */
+"archive.empty.title" = "Empty Archive";
+"archive.empty.message" = "No files in this archive";
+
+/* ========================================
+   File Operations
    ======================================== */
 "file.delete.failed" = "Failed to delete file";
 "file.delete.success" = "File deleted successfully";
@@ -172,7 +201,7 @@
 "settings.tools.status" = "Status:";
 "settings.tools.installed" = "All tools installed";
 "settings.tools.missing" = "%d tool(s) missing";
-"settings.tools.install" = "Install 7zz & RAR";
+"settings.tools.install" = "Install Tools";
 "settings.tools.installing" = "Installing...";
 "settings.tools.delete" = "Delete Tools";
 "settings.tools.checking" = "Checking...";
@@ -208,6 +237,7 @@
 "settings.updates.auto.check.desc" = "Check for updates automatically";
 "settings.updates.check.button" = "Check for Updates";
 "settings.updates.checking" = "Checking...";
+"settings.updates.checking.progress" = "Checking for updates...";
 "settings.updates.available" = "Version %@ available";
 "settings.updates.beta" = "(Beta)";
 "settings.updates.view" = "View";
@@ -215,6 +245,7 @@
 "settings.updates.cancel" = "Cancel";
 "settings.updates.restarting" = "Restarting in %ds...";
 "settings.updates.footer" = "Updates are downloaded from GitHub Releases";
+"settings.updates.file.not.found" = "Update file not found in release";
 
 "settings.updates.no.update.title" = "No Update Available";
 "settings.updates.no.update.message" = "You are running the latest version.";
@@ -230,6 +261,7 @@
 "settings.about.version" = "Version %@";
 "settings.about.developer.mode" = "Developer Mode Active";
 "settings.about.license" = "MIT License • Open Source";
+"settings.about.github" = "GitHub";
 
 /* ========================================
    Help
@@ -238,6 +270,7 @@
 "help.search.placeholder" = "Search";
 "help.search.empty" = "No results found for \"%@\"";
 "help.close" = "Close";
+"help.bullet" = "•";
 
 "help.item.open.archive" = "📦 Open Archive";
 "help.item.open.archive.desc1" = "Click 'Open Archive' or press ⌘O to open";
@@ -329,6 +362,7 @@
 "developer.advanced.memory.limit" = "Memory Limit (MB):";
 "developer.advanced.memory.apply" = "Apply";
 "developer.advanced.memory.desc" = "Maximum memory usage during extraction";
+"developer.advanced.memory.mb" = "MB";
 "developer.advanced.temp.dir" = "Temp Directory:";
 "developer.advanced.temp.browse" = "Browse";
 "developer.advanced.temp.apply" = "Apply";

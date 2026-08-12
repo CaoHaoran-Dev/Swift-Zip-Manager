@@ -16,7 +16,8 @@ class UpdateInstaller {
     typealias ProgressHandler = (Double, String) -> Void
     typealias CompletionHandler = (Bool, String) -> Void
     
-    // MARK: - 路径属性
+    private var isInstalling = false
+    private var shouldCancel = false
     
     private var appSupportFolder: URL {
         let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -46,17 +47,29 @@ class UpdateInstaller {
         progress: @escaping ProgressHandler,
         completion: @escaping CompletionHandler
     ) {
+        guard !isInstalling else {
+            completion(false, "Installation already in progress")
+            return
+        }
+        
+        isInstalling = true
+        shouldCancel = false
+        
         let sourceURL = zipURL ?? downloadedZipURL
         
         guard fileManager.fileExists(atPath: sourceURL.path) else {
-            completion(false, "Update package not found at: \(sourceURL.path)")
+            isInstalling = false
+            completion(false, "Update package not found")
             return
         }
+        
+        print("📦 [UpdateInstaller] Starting installation...")
         
         do {
             try fileManager.createDirectory(at: appSupportFolder, withIntermediateDirectories: true)
         } catch {
-            completion(false, "Failed to create App Support directory: \(error.localizedDescription)")
+            isInstalling = false
+            completion(false, "Failed to create directory: \(error.localizedDescription)")
             return
         }
         
@@ -64,31 +77,35 @@ class UpdateInstaller {
             guard let self = self else { return }
             
             do {
-                progress(0.2, "Extracting update...")
+                progress(0.2, "Extracting...")
                 try self.extractZip(from: sourceURL)
                 
                 guard self.fileManager.fileExists(atPath: self.extractedAppURL.path) else {
                     throw InstallError.extractedAppNotFound
                 }
                 
-                progress(0.6, "Installing update...")
+                progress(0.6, "Installing...")
                 try self.replaceApp()
                 
                 progress(0.8, "Cleaning up...")
                 self.cleanOldFiles()
                 
-                progress(1.0, "Update complete")
+                progress(1.0, "Complete")
+                UserDefaults.standard.synchronize()
                 
                 DispatchQueue.main.async {
+                    self.isInstalling = false
                     self.showRestartPrompt(completion: completion)
                 }
                 
             } catch let error as InstallError {
                 DispatchQueue.main.async {
+                    self.isInstalling = false
                     completion(false, error.localizedDescription)
                 }
             } catch {
                 DispatchQueue.main.async {
+                    self.isInstalling = false
                     completion(false, "Installation failed: \(error.localizedDescription)")
                 }
             }
@@ -96,7 +113,7 @@ class UpdateInstaller {
     }
     
     func cancelInstallation() {
-        cleanOldFiles()
+        shouldCancel = true
     }
     
     // MARK: - 私有方法
@@ -106,9 +123,13 @@ class UpdateInstaller {
             try fileManager.removeItem(at: extractedAppURL)
         }
         
+        let tempExtractDir = appSupportFolder.appendingPathComponent("extracted_temp")
+        try? fileManager.removeItem(at: tempExtractDir)
+        try fileManager.createDirectory(at: tempExtractDir, withIntermediateDirectories: true)
+        
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/ditto")
-        process.arguments = ["-x", "-k", sourceURL.path, appSupportFolder.path]
+        process.arguments = ["-x", "-k", sourceURL.path, tempExtractDir.path]
         
         try process.run()
         process.waitUntilExit()
@@ -117,37 +138,31 @@ class UpdateInstaller {
             throw InstallError.extractionFailed(status: process.terminationStatus)
         }
         
-        guard fileManager.fileExists(atPath: extractedAppURL.path) else {
+        let contents = try fileManager.contentsOfDirectory(at: tempExtractDir, includingPropertiesForKeys: nil)
+        guard let extractedApp = contents.first(where: { $0.pathExtension == "app" }) else {
             throw InstallError.extractedAppNotFound
         }
+        
+        try fileManager.moveItem(at: extractedApp, to: extractedAppURL)
+        try? fileManager.removeItem(at: tempExtractDir)
     }
     
     private func replaceApp() throws {
         let targetPath = targetAppURL.path
         
-        print("🔄 Replacing app at: \(targetPath)")
-        
         if fileManager.fileExists(atPath: targetPath) {
-            print("🗑️ Removing old app...")
             try fileManager.removeItem(at: targetAppURL)
         }
         
-        print("📦 Moving new app to: \(targetPath)")
         try fileManager.moveItem(at: extractedAppURL, to: targetAppURL)
-        
-        print("✅ App replacement complete")
     }
     
     private func cleanOldFiles() {
-        if fileManager.fileExists(atPath: downloadedZipURL.path) {
-            try? fileManager.removeItem(at: downloadedZipURL)
-        }
-        if fileManager.fileExists(atPath: extractedAppURL.path) {
-            try? fileManager.removeItem(at: extractedAppURL)
-        }
+        try? fileManager.removeItem(at: downloadedZipURL)
+        try? fileManager.removeItem(at: extractedAppURL)
     }
     
-    // MARK: - 重启提示
+    // MARK: - 重启
     
     private func showRestartPrompt(completion: @escaping CompletionHandler) {
         let alert = NSAlert()
@@ -160,74 +175,37 @@ class UpdateInstaller {
         let response = alert.runModal()
         
         if response == .alertFirstButtonReturn {
-            print("🚀 User chose to restart now")
             launchNewInstanceAndExit(completion: completion)
         } else {
-            print("👋 User chose to restart later, exiting...")
-            completion(true, "Update installed. Please restart the app manually.")
+            completion(true, "Update installed. Please restart manually.")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 NSApp.terminate(nil)
             }
         }
     }
     
-    // MARK: - 启动新实例并退出旧实例
-    
     private func launchNewInstanceAndExit(completion: @escaping CompletionHandler) {
         let targetPath = targetAppURL
         
         guard fileManager.fileExists(atPath: targetPath.path) else {
-            print("❌ Target app not found at: \(targetPath.path)")
-            showManualRestartAlert(message: "settings.updates.error.app.missing".localized)
             completion(false, "Target app not found")
             return
         }
         
-        print("🚀 Launching new instance: \(targetPath.path)")
-        
-        // ✅ 使用 /usr/bin/open -n 强制启动新实例
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
         process.arguments = ["-n", targetPath.path]
-        process.standardOutput = Pipe()
-        process.standardError = Pipe()
         
         do {
             try process.run()
-            process.waitUntilExit()
+            completion(true, "Update complete, restarting...")
             
-            if process.terminationStatus == 0 {
-                print("✅ New instance launched successfully")
-                completion(true, "Update complete, restarting...")
-                
-                // ✅ 启动成功后，退出旧实例
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    print("🔄 Terminating old instance...")
-                    NSApp.terminate(nil)
-                }
-            } else {
-                let errorPipe = process.standardError as? Pipe
-                let errorData = errorPipe?.fileHandleForReading.readDataToEndOfFile()
-                let errorMsg = errorData.flatMap { String(data: $0, encoding: .utf8) } ?? "Unknown error"
-                
-                print("❌ Failed to launch: \(errorMsg)")
-                showManualRestartAlert(message: "Failed to launch: \(errorMsg)")
-                completion(false, errorMsg)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                NSApp.terminate(nil)
             }
         } catch {
-            print("❌ Failed to launch: \(error)")
-            showManualRestartAlert(message: "Failed to launch: \(error.localizedDescription)")
             completion(false, error.localizedDescription)
         }
-    }
-    
-    private func showManualRestartAlert(message: String) {
-        let alert = NSAlert()
-        alert.messageText = "settings.updates.complete.title".localized
-        alert.informativeText = message
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "alert.ok".localized)
-        alert.runModal()
     }
 }
 
@@ -240,9 +218,9 @@ enum InstallError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .extractionFailed(let status):
-            return "Failed to extract update package (status: \(status))"
+            return "Extraction failed (status: \(status))"
         case .extractedAppNotFound:
-            return "Extracted app not found in update package"
+            return "Extracted app not found"
         }
     }
 }

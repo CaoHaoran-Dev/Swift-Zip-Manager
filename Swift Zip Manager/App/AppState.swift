@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// MARK: - App State
 class AppState: ObservableObject {
     @Published var showNewArchive = false
     @Published var showSettings = false
@@ -48,12 +47,54 @@ class AppState: ObservableObject {
     var settingsWindow: NSWindow?
     var helpWindow: NSWindow?
     
+    // ✅ 启动计数（用于自动检查更新）
+    private let launchCountKey = "AppLaunchCount"
+    private let lastUpdateCheckKey = "LastUpdateCheckDate"
+    private let updateCheckInterval: TimeInterval = 86400 // 24小时
+    
+    var launchCount: Int {
+        get { UserDefaults.standard.integer(forKey: launchCountKey) }
+        set { UserDefaults.standard.set(newValue, forKey: launchCountKey) }
+    }
+    
+    var lastUpdateCheckDate: Date? {
+        get { UserDefaults.standard.object(forKey: lastUpdateCheckKey) as? Date }
+        set { UserDefaults.standard.set(newValue, forKey: lastUpdateCheckKey) }
+    }
+    
     init() {
         isDeveloperMode = UserDefaults.standard.bool(forKey: "DeveloperMode")
         loadDeveloperSettings()
         if isDeveloperMode {
             addDevLog("Developer Mode Active", type: .info)
         }
+        
+        // ✅ 增加启动计数
+        launchCount += 1
+        print("📱 [AppState] Launch count: \(launchCount)")
+    }
+    
+    // MARK: - ✅ 检查是否需要自动更新
+    
+    func shouldCheckForUpdates() -> Bool {
+        // 每 5 次启动检查一次
+        if launchCount % 5 == 0 {
+            return true
+        }
+        
+        // 或者距离上次检查超过 24 小时
+        if let lastCheck = lastUpdateCheckDate,
+           Date().timeIntervalSince(lastCheck) > updateCheckInterval {
+            return true
+        }
+        
+        return false
+    }
+    
+    // MARK: - ✅ 记录更新检查时间
+    
+    func recordUpdateCheck() {
+        lastUpdateCheckDate = Date()
     }
     
     func closeCurrentWindow() {

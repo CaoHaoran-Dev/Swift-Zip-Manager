@@ -15,8 +15,11 @@ struct FileBrowserView: View {
     @Binding var viewMode: ViewMode
     
     @State private var items: [FileItem] = []
+    @State private var selectedItemIDs = Set<UUID>()
     @State private var isLoading = false
     @State private var isDragTarget = false
+    
+    private let cache = NSCache<NSString, NSArray>()
     
     enum ViewMode: String, CaseIterable {
         case list = "list.bullet"
@@ -30,38 +33,32 @@ struct FileBrowserView: View {
             FileBrowserToolbar(
                 viewMode: $viewMode,
                 onGoUp: goUp,
-                onExtractAll: manager.currentArchive != nil ? extractAll : nil
+                onExtractAll: extractAll
             )
             Divider()
             
             contentView
         }
         .task(id: currentDirectory) {
-            guard let dir = currentDirectory else { return }
-            isLoading = true
-            defer { isLoading = false }
-            
-            let loadedItems = await Task {
-                return loadDirectoryContents(dir)
-            }.value
-            
-            items = loadedItems
+            await loadDirectory()
         }
         .onDrop(of: [.fileURL], isTargeted: $isDragTarget) { providers in
             handleDrop(providers: providers)
         }
     }
     
+    // MARK: - Content
+    
     @ViewBuilder
     private var contentView: some View {
         if isLoading {
-            // ✅ 使用 LoadingView
             LoadingView("filebrowser.loading".localized)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if manager.currentArchive != nil {
+            // ✅ 显示归档内容视图（带提取全部按钮）
             ArchiveContentView(manager: manager)
+                .environmentObject(LanguageManager())
         } else if items.isEmpty {
-            // ✅ 使用 EmptyStateView
             EmptyStateView(
                 icon: "folder",
                 title: "filebrowser.empty.title".localized,
@@ -80,13 +77,46 @@ struct FileBrowserView: View {
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if viewMode == .list {
-            FileListView(items: items, onItemTap: handleItemTap)
+            FileListView(
+                items: items,
+                selectedIDs: $selectedItemIDs,
+                onItemTap: handleItemTap
+            )
         } else {
-            FileGridView(items: items, onItemTap: handleItemTap)
+            FileGridView(
+                items: items,
+                selectedIDs: $selectedItemIDs,
+                onItemTap: handleItemTap
+            )
         }
     }
     
-    func loadDirectoryContents(_ url: URL) -> [FileItem] {
+    // MARK: - Loading
+    
+    @MainActor
+    private func loadDirectory() async {
+        guard let dir = currentDirectory else {
+            items = []
+            return
+        }
+        
+        isLoading = true
+        defer { isLoading = false }
+        
+        let cacheKey = "\(dir.path)" as NSString
+        if let cached = cache.object(forKey: cacheKey) as? [FileItem] {
+            items = cached
+            return
+        }
+        
+        let loadedItems = loadDirectoryContents(dir)
+        cache.setObject(loadedItems as NSArray, forKey: cacheKey)
+        cache.totalCostLimit = 50
+        
+        items = loadedItems
+    }
+    
+    private func loadDirectoryContents(_ url: URL) -> [FileItem] {
         var fileItems: [FileItem] = []
         let fm = FileManager.default
         
@@ -124,47 +154,96 @@ struct FileBrowserView: View {
         return fileItems
     }
     
-    func goUp() {
+    // MARK: - Actions
+    
+    private func goUp() {
         if let dir = currentDirectory?.deletingLastPathComponent() {
             currentDirectory = dir
+            cache.removeAllObjects()
         }
     }
     
-    func extractAll() {
-        let panel = NSOpenPanel()
-        panel.canChooseDirectories = true
-        panel.canCreateDirectories = true
-        panel.begin { response in
-            if response == .OK, let url = panel.url {
-                manager.extractArchive(to: url)
-            }
+    // ✅ 提取全部：由 ArchiveContentView 处理
+    private func extractAll() {
+        // 如果当前有打开的归档，发送提取全部通知
+        if manager.currentArchive != nil {
+            NotificationCenter.default.post(name: .extractAllNotification, object: nil)
+        } else {
+            // 没有归档时，显示提示
+            manager.error = "archive.no.archive.open".localized
+            manager.showAlert = true
         }
     }
     
-    func handleItemTap(_ item: FileItem) {
+    private func handleItemTap(_ item: FileItem) {
         if item.isDirectory {
             currentDirectory = item.url
+            cache.removeAllObjects()
         } else if item.isArchive {
             manager.loadArchive(item.url, recentManager: recentManager)
         }
     }
     
-    func handleDrop(providers: [NSItemProvider]) -> Bool {
+    // MARK: - Drag & Drop
+    
+    private func handleDrop(providers: [NSItemProvider]) -> Bool {
+        let group = DispatchGroup()
+        var loadedURLs: [URL] = []
+        var hasError = false
+        
         for provider in providers {
-            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { item, _ in
+            group.enter()
+            provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { item, error in
+                defer { group.leave() }
+                
+                if let error = error {
+                    print("⚠️ Drag drop error: \(error)")
+                    hasError = true
+                    return
+                }
+                
                 if let data = item as? Data,
                    let url = URL(dataRepresentation: data, relativeTo: nil) {
-                    DispatchQueue.main.async {
-                        let ext = url.pathExtension.lowercased()
-                        if ["zip", "7z", "rar", "tar", "gz", "tgz"].contains(ext) {
-                            manager.loadArchive(url, recentManager: recentManager)
-                        } else {
-                            currentDirectory = url.deletingLastPathComponent()
-                        }
-                    }
+                    loadedURLs.append(url)
                 }
             }
         }
+        
+        group.notify(queue: .main) {
+            guard !loadedURLs.isEmpty else {
+                if hasError {
+                    manager.error = "filebrowser.drop.error".localized
+                    manager.showAlert = true
+                }
+                return
+            }
+            
+            var archives: [URL] = []
+            var directories: [URL] = []
+            
+            for url in loadedURLs {
+                let ext = url.pathExtension.lowercased()
+                if ["zip", "7z", "rar", "tar", "gz", "tgz"].contains(ext) {
+                    archives.append(url)
+                } else {
+                    var isDirectory: ObjCBool = false
+                    if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+                       isDirectory.boolValue {
+                        directories.append(url)
+                    } else {
+                        directories.append(url.deletingLastPathComponent())
+                    }
+                }
+            }
+            
+            if let firstArchive = archives.first {
+                manager.loadArchive(firstArchive, recentManager: recentManager)
+            } else if let firstDir = directories.first {
+                currentDirectory = firstDir
+                cache.removeAllObjects()
+            }
+        }
+        
         return true
     }
 }

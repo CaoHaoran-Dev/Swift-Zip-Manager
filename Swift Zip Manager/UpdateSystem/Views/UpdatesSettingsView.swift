@@ -12,7 +12,6 @@ struct UpdatesSettingsView: View {
     @AppStorage("autoCheckUpdates") private var autoCheckUpdates = true
     @AppStorage("includePrereleaseUpdates") private var includePrereleaseUpdates = false
     @State private var showUpdateSheet = false
-    @State private var showNoUpdateAlert = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -33,6 +32,7 @@ struct UpdatesSettingsView: View {
                 Divider()
                 autoCheckRow
                 checkButtonRow
+                checkStatusRow  // ✅ 显示检查过程
                 
                 if let update = updateChecker.updateAvailable {
                     updateAvailableRow(update)
@@ -54,12 +54,14 @@ struct UpdatesSettingsView: View {
                 )
             }
         }
-        .alert("settings.updates.no.update.title".localized, isPresented: $showNoUpdateAlert) {
+        .alert("settings.updates.no.update.title".localized, isPresented: $updateChecker.showCheckResult) {
             Button("alert.ok".localized) { }
         } message: {
-            Text("settings.updates.no.update.message".localized)
+            Text(updateChecker.checkResultMessage ?? "settings.updates.no.update.message".localized)
         }
     }
+    
+    // MARK: - Subviews
     
     @ViewBuilder
     private var currentVersionRow: some View {
@@ -124,6 +126,38 @@ struct UpdatesSettingsView: View {
         }
     }
     
+    // MARK: - ✅ 显示检查状态
+    
+    @ViewBuilder
+    private var checkStatusRow: some View {
+        if updateChecker.isChecking {
+            HStack {
+                Text("")
+                    .frame(width: 140, alignment: .leading)
+                HStack {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text("settings.updates.checking.progress".localized)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        } else if updateChecker.checkResultMessage != nil && !updateChecker.showCheckResult {
+            HStack {
+                Text("")
+                    .frame(width: 140, alignment: .leading)
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                        .font(.caption)
+                    Text(updateChecker.checkResultMessage ?? "")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+    
     @ViewBuilder
     private func updateAvailableRow(_ update: UpdateChecker.UpdateInfo) -> some View {
         HStack {
@@ -168,19 +202,20 @@ struct UpdatesSettingsView: View {
             .padding(.leading, 148)
     }
     
+    // MARK: - Actions
+    
     private func checkForUpdates() {
-        // 检查时先清除之前的更新状态
+        updateChecker.checkResultMessage = nil
         updateChecker.updateAvailable = nil
         
-        updateChecker.checkForUpdates(
+        updateChecker.manualCheckForUpdates(
             includePrerelease: includePrereleaseUpdates,
-            showIfNone: false
+            showIfNone: true
         ) { hasUpdate, message in
             if hasUpdate {
                 showUpdateSheet = true
-            } else {
-                showNoUpdateAlert = true
             }
+            // 无更新时，alert 会自动显示
         }
     }
     

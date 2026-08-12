@@ -20,7 +20,7 @@ struct AdvancedSettingsView: View {
                         TextField("512", value: $appState.advancedMemoryLimit, formatter: NumberFormatter())
                             .textFieldStyle(.roundedBorder)
                             .frame(width: 100)
-                        Text("MB")
+                        Text("developer.advanced.memory.mb".localized)
                             .font(.caption)
                         Button("developer.advanced.memory.apply".localized) {
                             appState.saveDeveloperSettings()

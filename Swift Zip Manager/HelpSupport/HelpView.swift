@@ -119,7 +119,7 @@ struct HelpView: View {
                     
                     ForEach(item.1, id: \.self) { line in
                         HStack(alignment: .top, spacing: 8) {
-                            Text("•")
+                            Text("help.bullet".localized)
                                 .foregroundColor(.accentColor)
                             Text(line)
                                 .font(.subheadline)
