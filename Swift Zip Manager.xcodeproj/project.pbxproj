@@ -29,6 +29,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		ADA5691230344F7A00D9AF41 /* .github */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = .github;
+			sourceTree = "<group>";
+		};
 		ADC380DB302849530053EC97 /* Docs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Docs;
@@ -120,6 +125,7 @@
 		AD12EEB82F5AEC2200C0B791 = {
 			isa = PBXGroup;
 			children = (
+				ADA5691230344F7A00D9AF41 /* .github */,
 				AD8D4C7C3027199800E68398 /* LICENSE */,
 				AD8D4C9830273CCA00E68398 /* README.md */,
 				ADC380DB302849530053EC97 /* Docs */,
