@@ -50,6 +50,7 @@ jobs:
             -scheme "$scheme" \
             -"$filetype_parameter" "$file_to_build" \
             -destination 'platform=macOS' \
+            -skipPackagePluginValidation \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGN_STYLE="Manual" \
             DEVELOPMENT_TEAM="" \
