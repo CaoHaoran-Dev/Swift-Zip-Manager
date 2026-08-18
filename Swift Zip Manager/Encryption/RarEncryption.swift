@@ -14,6 +14,8 @@ class RarEncryption: ArchiveEncryption {
         self.toolResolver = toolResolver
     }
     
+    // MARK: - 创建加密 RAR 归档
+    
     func create(sourceURLs: [URL], destinationURL: URL, password: String?) throws {
         guard let toolPath = toolResolver.resolve("rar") else {
             throw ArchiveError.toolNotFound("rar")
@@ -22,14 +24,14 @@ class RarEncryption: ArchiveEncryption {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: toolPath)
         
+        // ✅ rar a 参数：a = add, -r = 递归添加子目录
         var args = ["a", "-r"]
         
+        // ✅ 密码：使用 -hp密码 参数（-hp 加密文件头，比 -p 更安全）
         if let pwd = password, !pwd.isEmpty {
-            var environment = ProcessInfo.processInfo.environment
-            environment["RAR_PASSWORD"] = pwd
-            process.environment = environment
-            args.append("-hp")
+            args.append("-hp\(pwd)")
         }
+        
         args.append(destinationURL.path)
         args.append(contentsOf: sourceURLs.map { $0.path })
         
@@ -38,6 +40,9 @@ class RarEncryption: ArchiveEncryption {
         
         let errorPipe = Pipe()
         process.standardError = errorPipe
+        
+        print("🔍 [RarEncryption] Creating RAR archive")
+        print("🔍 [RarEncryption] Has password: \(password != nil && !password!.isEmpty)")
         
         try process.run()
         process.waitUntilExit()
@@ -49,6 +54,8 @@ class RarEncryption: ArchiveEncryption {
         }
     }
     
+    // MARK: - 提取加密 RAR 归档
+    
     func extract(sourceURL: URL, destinationURL: URL, password: String?) throws {
         guard let toolPath = toolResolver.resolve("rar") else {
             throw ArchiveError.toolNotFound("rar")
@@ -57,13 +64,14 @@ class RarEncryption: ArchiveEncryption {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: toolPath)
         
+        // ✅ rar x 参数：x = 保留路径解压
         var args = ["x"]
         
+        // ✅ 密码：使用 -p密码 参数（提取时用 -p，不需要 -hp）
         if let pwd = password, !pwd.isEmpty {
-            var environment = ProcessInfo.processInfo.environment
-            environment["RAR_PASSWORD"] = pwd
-            process.environment = environment
+            args.append("-p\(pwd)")
         }
+        
         args.append(sourceURL.path)
         args.append(destinationURL.path)
         
@@ -71,6 +79,9 @@ class RarEncryption: ArchiveEncryption {
         
         let errorPipe = Pipe()
         process.standardError = errorPipe
+        
+        print("🔍 [RarEncryption] Extracting RAR archive")
+        print("🔍 [RarEncryption] Has password: \(password != nil && !password!.isEmpty)")
         
         try process.run()
         process.waitUntilExit()
@@ -80,10 +91,12 @@ class RarEncryption: ArchiveEncryption {
             let errorMsg = String(data: errorData, encoding: .utf8) ?? "Unknown error"
             
             let lowercasedError = errorMsg.lowercased()
-            if lowercasedError.contains("password") || lowercasedError.contains("wrong") || lowercasedError.contains("bad") {
+            if lowercasedError.contains("password") ||
+               lowercasedError.contains("wrong") ||
+               lowercasedError.contains("bad") {
                 throw ArchiveError.wrongPassword
             }
-            throw ArchiveError.commandFailed(errorMsg)
+            throw ArchiveError.commandFailed("RAR extraction failed: \(errorMsg)")
         }
     }
 }
